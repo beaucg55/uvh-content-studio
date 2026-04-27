@@ -146,6 +146,8 @@ nav{border-bottom:1px solid var(--gold-border);padding:18px 32px;display:flex;ju
 
 /* Voice note hint */
 .hint{font-size:11px;color:var(--faint);margin-top:5px}
+.back-btn{display:inline-flex;align-items:center;gap:6px;background:none;border:none;color:var(--muted);font-size:13px;font-weight:500;cursor:pointer;padding:0;margin-bottom:20px;transition:color 0.15s;font-family:var(--body)}
+.back-btn:hover{color:var(--off)}
 
 /* Word count */
 .word-count{font-family:var(--mono);font-size:10px;padding:2px 7px;border-radius:3px;background:rgba(120,112,106,0.12);color:var(--muted);border:1px solid rgba(120,112,106,0.2);letter-spacing:0.08em;text-transform:uppercase}
@@ -213,6 +215,7 @@ nav{border-bottom:1px solid var(--gold-border);padding:18px 32px;display:flex;ju
 ═══════════════════════════════════════════ -->
 <div class="page" id="pageSetup">
   <div class="container">
+    <button class="back-btn" onclick="showPage('pageLanding')">← Back</button>
     <div class="label">Step 1 of 4</div>
     <h1 class="display fu" style="font-size:clamp(28px,4vw,40px);margin-bottom:8px">What are we creating?</h1>
     <p style="color:var(--muted);font-size:14px;margin-bottom:28px;line-height:1.65">Choose your post type and geographic focus for this week.</p>
@@ -266,6 +269,7 @@ nav{border-bottom:1px solid var(--gold-border);padding:18px 32px;display:flex;ju
 ═══════════════════════════════════════════ -->
 <div class="page" id="pageTrends">
   <div class="container">
+    <button class="back-btn" onclick="showPage('pageSetup');restoreSetupUI()">← Back</button>
     <div class="label">Step 2 of 4</div>
     <h1 class="display fu" style="font-size:clamp(28px,4vw,40px);margin-bottom:8px">Set the stage</h1>
     <p style="color:var(--muted);font-size:14px;margin-bottom:28px;line-height:1.65">Pick a trending hook and share what's on your mind this week.</p>
@@ -312,6 +316,7 @@ nav{border-bottom:1px solid var(--gold-border);padding:18px 32px;display:flex;ju
   <div class="container-wide">
     <div style="display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:28px;flex-wrap:wrap;gap:12px">
       <div>
+        <button class="back-btn" onclick="showPage('pageTrends');renderQuestions();fetchTrends()">← Back &amp; Regenerate</button>
         <div class="label">Step 4 of 4</div>
         <h1 class="display" style="font-size:36px;font-weight:500">Review &amp; Approve</h1>
         <div style="color:var(--muted);font-size:13px;margin-top:4px" id="reviewMeta"></div>
@@ -549,6 +554,10 @@ function parseJSON(raw) {
   try { return JSON.parse(raw.replace(/```json|```/g,'').trim()); } catch { return null; }
 }
 
+function todayDate() {
+  return new Date().toLocaleDateString('en-US', { weekday:'long', year:'numeric', month:'long', day:'numeric' });
+}
+
 // ═══════════════════════════════════════════════════════
 // SETTINGS
 // ═══════════════════════════════════════════════════════
@@ -699,13 +708,14 @@ function goStep2() {
 // ═══════════════════════════════════════════════════════
 async function fetchTrends() {
   const gl = geoLabel();
+  const today = todayDate();
   const loadEl = document.getElementById('trendLoading');
   const cardsEl = document.getElementById('trendCards');
   loadEl.style.display = 'flex';
   try {
     const raw = await callClaude([{ role:'user', content:
-      `Find 3 trending topics (current week) relevant to a Utah real estate ${flow.postType} social post for ${gl}. Mix: local Utah news, RE trends, community events, non-political pop culture from past 2 weeks. Return JSON only: {"topics":[{"id":"t1","headline":"catchy short headline","why":"one sentence why this fits","hook":"how Beau could naturally reference this"}]}`
-    }], 'You are a social media strategist for a Utah realtor. Return valid JSON only.', 700);
+      `Today is ${today}. Search the web for 3 real, current trending topics from the past 7 days relevant to a Utah real estate ${flow.postType} social post for ${gl}. Use actual recent news — local Utah events, real estate market news, community happenings, or non-political pop culture from this week. For each topic include a real source URL where Beau can verify the information. Return JSON only: {"topics":[{"id":"t1","headline":"catchy short headline based on real current news","why":"one sentence why this fits a ${flow.postType} post right now","hook":"how Beau could naturally reference this this week","sourceUrl":"https://actual-source-url.com","sourceName":"Source Name"}]}`
+    }], 'You are a social media strategist for a Utah realtor. Search for real current news. Return valid JSON only.', 900);
     const r = parseJSON(raw);
     const topics = r?.topics || [];
     cardsEl.innerHTML = topics.map(t => `
@@ -713,8 +723,9 @@ async function fetchTrends() {
         <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px">
           <div style="flex:1">
             <div style="font-weight:600;font-size:14px;margin-bottom:3px">${t.headline}</div>
-            <div style="font-size:12px;color:var(--muted);margin-bottom:3px">${t.why}</div>
-            <div style="font-size:12px;color:var(--gold);font-style:italic">${t.hook}</div>
+            <div style="font-size:12px;color:var(--muted);margin-bottom:4px">${t.why}</div>
+            <div style="font-size:12px;color:var(--gold);font-style:italic;margin-bottom:5px">${t.hook}</div>
+            ${t.sourceUrl ? `<a href="${t.sourceUrl}" target="_blank" rel="noopener" style="font-size:11px;color:var(--blue);text-decoration:none;font-family:var(--mono)" onclick="event.stopPropagation()">↗ ${t.sourceName||'View source'}</a>` : ''}
           </div>
           <div class="trend-dot"></div>
         </div>
@@ -758,22 +769,30 @@ async function renderQuestions() {
 
 async function fetchSuggestions(q, gl) {
   try {
+    const today = todayDate();
     const raw = await callClaude([{ role:'user', content:
-      `Generate 3 short first-person answer options for a ${flow.postType} real estate post for ${gl}, for this question: "${q.text}". Sound like Beau Gardner — warm, genuine, knowledgeable northern Utah realtor. 1-2 sentences each. Specific, not generic. JSON only: {"options":["...","...","..."]}`
-    }], 'Return valid JSON only.', 500);
+      `Today is ${today}. Search the web for current real information about ${gl} Utah real estate to answer this question with 3 specific factual first-person options: "${q.text}". Each option must reference real current data or something actually happening in ${gl} right now. Sound like Beau Gardner: warm, genuine, knowledgeable northern Utah realtor. 1-2 sentences each. Include a source URL for each so Beau can verify. JSON only: {"options":[{"text":"first person answer with real current data","sourceUrl":"https://real-source.com","sourceName":"Source Name"}]}`
+    }], 'You are a Utah real estate market researcher. Search for real current data. Return valid JSON only.', 800);
     const r = parseJSON(raw);
     const opts = r?.options || [];
-    const el = document.getElementById(`sugg_${q.id}`);
+    const el = document.getElementById('sugg_' + q.id);
     if (!el) return;
-    el.innerHTML = opts.map(s => `
-      <button class="sugg-btn" onclick="pickSugg('${q.id}',this,'${s.replace(/'/g,"\\'")}')">
-        ${s}
-      </button>`).join('');
+    el.innerHTML = opts.map(function(o) {
+      const text = typeof o === 'string' ? o : (o.text || '');
+      const sourceUrl = typeof o === 'object' ? (o.sourceUrl || '') : '';
+      const sourceName = typeof o === 'object' ? (o.sourceName || 'View source') : 'View source';
+      const safeText = text.replace(/'/g, "\'").replace(/"/g, '&quot;');
+      return '<button class="sugg-btn" onclick="pickSugg('' + q.id + '',this,'' + safeText + '')">'
+        + '<div>' + text + '</div>'
+        + (sourceUrl ? '<div style="margin-top:5px"><a href="' + sourceUrl + '" target="_blank" rel="noopener" style="font-size:11px;color:var(--blue);text-decoration:none;font-family:var(--mono)" onclick="event.stopPropagation()">&#8599; ' + sourceName + '</a></div>' : '')
+        + '</button>';
+    }).join('');
   } catch {
-    const el = document.getElementById(`sugg_${q.id}`);
+    const el = document.getElementById('sugg_' + q.id);
     if (el) el.innerHTML = '';
   }
 }
+
 
 function pickSugg(qid, btn, val) {
   document.querySelectorAll(`#sugg_${qid} .sugg-btn`).forEach(b => b.classList.remove('selected'));
@@ -810,9 +829,10 @@ async function runGeneration() {
     const hc = hashCtx();
 
     setStatus('Fetching current market data...', 12);
+    const todayStr = todayDate();
     const market = await callClaude([{ role:'user', content:
-      `Get the most current real estate market data for ${gl}, Utah this week. Include median prices, days on market, inventory, notable news. Be specific with real numbers. 2-3 sentences.`
-    }], 'You are a real estate market researcher. Return factual current data. Be concise.', 320);
+      `Today is ${todayStr}. Search for the most current real estate market data for ${gl}, Utah as of this week. Include median prices, days on market, inventory levels, and any notable news from the past 2 weeks. Use real current numbers — do not estimate based on historical trends. 2-3 sentences.`
+    }], `You are a real estate market researcher. Today is ${new Date().toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'})}. Return factual current data only. Be concise.`, 320);
     flow.marketData = market;
 
     setStatus('Processing content...', 26);
@@ -826,6 +846,7 @@ async function runGeneration() {
     }
 
     setStatus('Writing three variations...', 50);
+    const todayFull = todayDate();
     const vc = store.voice().slice(0,6).map(e =>
       `[${e.date}|${e.postType}|${e.city||'Regional'}]: "${e.approvedCaption.slice(0,160)}"${e.voiceNote?` (note: "${e.voiceNote}")`:''}`)
       .join('\n');
@@ -837,7 +858,7 @@ async function runGeneration() {
     const inp = Object.entries(flow.answers||{}).filter(([,v])=>v?.trim()).map(([k,v])=>`${k}: ${v}`).join('\n');
 
     const prompt = `
-You are the social media content strategist for Utah Vista Homes. Generate 3 distinctly different post variations for Beau Gardner (Realtor, Fathom Realty) — a ${flow.postType} post.
+Today is ${todayFull}. You are the social media content strategist for Utah Vista Homes. Generate 3 distinctly different post variations for Beau Gardner (Realtor, Fathom Realty) — a ${flow.postType} post. All content must be timely and relevant to ${todayFull} — reflect the correct season, month, and current market conditions.
 
 GEOGRAPHIC FOCUS: ${gl}
 HASHTAG REACH CONTEXT: ${hc}
