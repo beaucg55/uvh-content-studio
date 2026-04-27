@@ -1,0 +1,1087 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Utah Vista Homes — Content Studio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Outfit:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --bg:#080F18;--surface:#0D1A28;--elevated:#142233;--hover:#1A2E44;
+  --gold:#D4A843;--gold-soft:#B8912C;--gold-dim:rgba(212,168,67,0.1);
+  --gold-border:rgba(212,168,67,0.22);--gold-strong:rgba(212,168,67,0.5);
+  --white:#EDE7D2;--off:#C5BAA5;--muted:#78706A;--faint:#2A2820;
+  --green:#3D9E6A;--green-bg:rgba(61,158,106,0.1);
+  --red:#C44040;--red-bg:rgba(196,64,64,0.1);
+  --blue:#4A92C6;--blue-bg:rgba(74,146,198,0.1);
+  --display:'Cormorant Garamond',Georgia,serif;
+  --body:'Outfit','DM Sans',sans-serif;
+  --mono:'JetBrains Mono','Courier New',monospace;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{background:var(--bg);color:var(--white);font-family:var(--body);-webkit-font-smoothing:antialiased;min-height:100vh}
+::-webkit-scrollbar{width:3px}::-webkit-scrollbar-track{background:var(--surface)}::-webkit-scrollbar-thumb{background:var(--gold-border);border-radius:2px}
+textarea,input,button,select{font-family:var(--body)}
+textarea:focus,input:focus,select:focus{outline:none}
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes glow{0%,100%{box-shadow:0 0 20px rgba(212,168,67,0.1)}50%{box-shadow:0 0 44px rgba(212,168,67,0.28)}}
+.fu{animation:fadeUp 0.32s ease both}
+
+/* Layout */
+.page{display:none}.page.active{display:block}
+.container{max-width:720px;margin:0 auto;padding:48px 20px}
+.container-wide{max-width:1020px;margin:0 auto;padding:40px 20px}
+
+/* Cards */
+.card{background:var(--surface);border:1px solid var(--gold-border);border-radius:10px;padding:20px;margin-bottom:14px}
+.card-glow{animation:glow 3s ease-in-out infinite}
+
+/* Typography */
+.label{font-family:var(--mono);font-size:10px;color:var(--muted);letter-spacing:0.2em;text-transform:uppercase;margin-bottom:6px}
+.display{font-family:var(--display);font-weight:500;line-height:1.15}
+.chip{font-family:var(--mono);font-size:10px;font-weight:500;padding:2px 7px;border-radius:3px;background:rgba(212,168,67,0.12);color:var(--gold);border:1px solid rgba(212,168,67,0.3);letter-spacing:0.08em;text-transform:uppercase}
+.chip-blue{background:var(--blue-bg);color:var(--blue);border-color:rgba(74,146,198,0.3)}
+.chip-muted{background:rgba(120,112,106,0.12);color:var(--muted);border-color:rgba(120,112,106,0.2)}
+
+/* Buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:10px 20px;font-size:13px;font-weight:600;border-radius:6px;border:none;cursor:pointer;transition:all 0.18s;letter-spacing:0.01em;font-family:var(--body)}
+.btn:disabled{opacity:0.42;cursor:not-allowed}
+.btn-gold{background:linear-gradient(135deg,var(--gold),var(--gold-soft));color:var(--bg)}
+.btn-outline{background:transparent;color:var(--gold);border:1px solid var(--gold-strong)}
+.btn-ghost{background:transparent;color:var(--off);border:1px solid var(--faint)}
+.btn-full{width:100%}
+.btn-lg{padding:13px 28px;font-size:15px}
+.btn-sm{padding:7px 14px;font-size:12px}
+
+/* Form */
+.field{margin-bottom:14px}
+textarea,input[type=text],input[type=url]{width:100%;background:var(--bg);border:1px solid var(--faint);border-radius:6px;padding:11px 13px;color:var(--white);font-size:14px;line-height:1.65;transition:border-color 0.2s;font-family:var(--body)}
+textarea:focus,input[type=text]:focus,input[type=url]:focus{border-color:var(--gold-border)}
+textarea{resize:vertical}
+
+/* Divider */
+.divider{height:1px;background:linear-gradient(90deg,transparent,var(--gold-border),transparent);margin:20px 0}
+
+/* Spinner */
+.spinner{display:inline-block;width:18px;height:18px;border:2px solid var(--faint);border-top:2px solid var(--gold);border-radius:50%;animation:spin 0.7s linear infinite;flex-shrink:0}
+
+/* Nav */
+nav{border-bottom:1px solid var(--gold-border);padding:18px 32px;display:flex;justify-content:space-between;align-items:center}
+.nav-brand{font-family:var(--display);font-size:20px;letter-spacing:0.03em}
+.nav-sub{font-family:var(--mono);font-size:9px;color:var(--muted);letter-spacing:0.2em;text-transform:uppercase}
+
+/* Settings bar */
+#settingsBar{background:var(--elevated);border-bottom:1px solid var(--gold-border);padding:14px 32px;display:none;gap:12px;align-items:center}
+#settingsBar.open{display:flex}
+
+/* Post type grid */
+.type-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.type-btn{background:var(--elevated);border:1px solid var(--faint);border-radius:8px;padding:14px 16px;text-align:left;color:var(--white);cursor:pointer;transition:all 0.18s}
+.type-btn.selected{background:var(--gold-dim);border-color:var(--gold)}
+.type-btn .type-emoji{font-size:22px;margin-bottom:6px}
+.type-btn .type-name{font-weight:600;font-size:14px;margin-bottom:2px}
+.type-btn .type-day{font-family:var(--mono);font-size:10px;color:var(--muted)}
+
+/* Geo scope */
+.scope-btn{display:flex;justify-content:space-between;align-items:center;width:100%;background:var(--elevated);border:1px solid var(--faint);border-radius:6px;padding:12px 15px;color:var(--white);cursor:pointer;transition:all 0.18s;margin-bottom:7px;text-align:left}
+.scope-btn.selected{background:var(--gold-dim);border-color:var(--gold)}
+.scope-dot{width:8px;height:8px;border-radius:50%;background:var(--gold);flex-shrink:0;opacity:0}
+.scope-btn.selected .scope-dot{opacity:1}
+
+/* City pills */
+.city-wrap{display:flex;flex-wrap:wrap;gap:7px;margin-top:10px}
+.city-pill{background:var(--bg);border:1px solid var(--faint);border-radius:20px;padding:7px 14px;color:var(--off);font-size:13px;font-weight:500;cursor:pointer;transition:all 0.15s}
+.city-pill.selected{background:var(--gold-dim);border-color:var(--gold);color:var(--gold)}
+
+/* Suggestion buttons */
+.sugg-btn{display:block;width:100%;text-align:left;background:var(--elevated);border:1px solid var(--faint);border-radius:6px;padding:10px 13px;color:var(--off);font-size:13px;line-height:1.5;margin-bottom:7px;cursor:pointer;transition:all 0.15s}
+.sugg-btn.selected{background:var(--gold-dim);border-color:var(--gold);color:var(--white)}
+
+/* Trend card */
+.trend-card{background:var(--elevated);border:1px solid var(--faint);border-radius:7px;padding:11px 14px;margin-bottom:8px;cursor:pointer;transition:all 0.15s}
+.trend-card.selected{background:var(--gold-dim);border-color:var(--gold)}
+.trend-dot{width:16px;height:16px;border-radius:50%;border:2px solid var(--faint);flex-shrink:0;margin-top:2px;transition:all 0.15s}
+.trend-card.selected .trend-dot{background:var(--gold);border-color:var(--gold)}
+
+/* Progress bar */
+.progress-track{height:3px;background:var(--faint);border-radius:2px;margin-bottom:18px;overflow:hidden}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--gold-soft),var(--gold));border-radius:2px;transition:width 0.6s ease}
+
+/* Variation tabs */
+.var-tabs{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:20px}
+.var-tab{background:var(--surface);border:1px solid var(--faint);border-radius:7px;padding:9px 15px;cursor:pointer;transition:all 0.18s;display:flex;flex-direction:column;align-items:center;gap:3px}
+.var-tab.selected{background:var(--gold-dim);border-color:var(--gold)}
+.var-tab .vt-num{font-family:var(--mono);font-size:11px;font-weight:600;color:var(--muted)}
+.var-tab.selected .vt-num{color:var(--gold)}
+.var-tab .vt-angle{font-size:10px;color:var(--muted);font-family:var(--mono);max-width:80px;text-align:center;line-height:1.3}
+
+/* Platform tabs */
+.plat-tabs{display:flex;border-bottom:1px solid var(--faint);margin-bottom:0}
+.plat-tab{padding:9px 20px;background:transparent;border:none;border-bottom:2px solid transparent;color:var(--muted);font-size:13px;font-weight:600;cursor:pointer;font-family:var(--mono);letter-spacing:0.05em;transition:all 0.15s;margin-bottom:-1px}
+.plat-tab.active{border-bottom-color:var(--gold);color:var(--gold)}
+
+/* Review layout */
+.review-grid{display:grid;grid-template-columns:1fr 310px;gap:18px;align-items:start}
+@media(max-width:700px){.review-grid{grid-template-columns:1fr}}
+
+/* Image panel */
+.img-placeholder{background:var(--bg);border-radius:7px;aspect-ratio:1/1;display:flex;flex-direction:column;align-items:center;justify-content:center;border:1px solid var(--faint);padding:14px;margin-bottom:12px;text-align:center}
+
+/* Time pills */
+.time-pill{background:var(--elevated);border:1px solid var(--faint);border-radius:5px;padding:7px 11px;color:var(--muted);font-size:11px;font-family:var(--mono);cursor:pointer;transition:all 0.15s;display:inline-flex;align-items:center;gap:4px}
+.time-pill.selected{background:var(--gold-dim);border-color:var(--gold);color:var(--gold)}
+
+/* Landing */
+.landing-hero{text-align:center;padding:72px 24px}
+.landing-grid{display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid var(--gold-border)}
+.landing-cell{padding:18px 16px;border-right:1px solid var(--gold-border);text-align:center}
+.landing-cell:last-child{border-right:none}
+.analytics-strip{background:var(--surface);border-top:1px solid var(--gold-border);padding:14px 32px;display:flex;gap:28px;align-items:center;flex-wrap:wrap}
+
+/* Done screen */
+.done-screen{min-height:80vh;display:flex;align-items:center;justify-content:center;padding:24px}
+.done-card{max-width:420px;width:100%;text-align:center;padding:44px}
+
+/* Voice note hint */
+.hint{font-size:11px;color:var(--faint);margin-top:5px}
+
+/* Word count */
+.word-count{font-family:var(--mono);font-size:10px;padding:2px 7px;border-radius:3px;background:rgba(120,112,106,0.12);color:var(--muted);border:1px solid rgba(120,112,106,0.2);letter-spacing:0.08em;text-transform:uppercase}
+
+/* Recent voice ref */
+.voice-ref-item{padding:10px 0;border-bottom:1px solid var(--faint)}
+.voice-ref-item:last-child{border-bottom:none}
+
+/* Rank reason box */
+.rank-box{padding:14px;border-radius:8px;margin-bottom:13px}
+.rank-box.top{background:var(--gold-dim);border:1px solid var(--gold)}
+.rank-box.other{background:var(--surface);border:1px solid var(--faint)}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div>
+    <div class="nav-brand">Utah Vista Homes</div>
+    <div class="nav-sub">Content Studio</div>
+  </div>
+  <div style="display:flex;gap:10px;align-items:center">
+    <span class="chip chip-muted" id="voiceCount">0 posts in voice library</span>
+    <button class="btn btn-ghost btn-sm" onclick="toggleSettings()">⚙ Settings</button>
+  </div>
+</nav>
+
+<!-- SETTINGS BAR -->
+<div id="settingsBar">
+  <div style="font-family:var(--mono);font-size:11px;color:var(--muted);min-width:150px;flex-shrink:0">Zapier Webhook URL</div>
+  <input type="url" id="webhookInput" placeholder="https://hooks.zapier.com/hooks/catch/..." style="flex:1;font-family:var(--mono);font-size:12px"/>
+  <button class="btn btn-gold btn-sm" onclick="saveWebhook()">Save</button>
+  <span id="webhookWarning" style="font-size:11px;color:var(--red);flex-shrink:0;display:none">Required to publish</span>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     PAGE: LANDING
+═══════════════════════════════════════════ -->
+<div class="page active" id="pageLanding">
+  <div class="landing-hero">
+    <div class="label" style="margin-bottom:18px">Northern Utah County</div>
+    <h1 class="display" style="font-size:clamp(44px,7vw,78px);margin-bottom:16px;max-width:620px;margin-left:auto;margin-right:auto">
+      Posts that sound<br><em style="color:var(--gold)">like you</em>
+    </h1>
+    <p style="color:var(--muted);font-size:16px;max-width:400px;line-height:1.75;margin:0 auto 44px">
+      Generate three ranked variations, pick the one that feels right, edit it your way, then publish directly to Facebook and Instagram.
+    </p>
+    <button class="btn btn-gold btn-lg" onclick="startFlow()">Create a Post →</button>
+  </div>
+  <div class="analytics-strip" id="analyticsStrip" style="display:none">
+    <div class="label" style="margin:0">Last 7 Days</div>
+    <div id="analyticsContent"></div>
+  </div>
+  <div class="landing-grid">
+    <div class="landing-cell"><div style="font-size:22px;margin-bottom:4px">📊</div><div style="font-weight:600;font-size:13px;margin-bottom:2px">Market Monday</div><div style="font-family:var(--mono);font-size:10px;color:var(--muted)">Tuesdays</div></div>
+    <div class="landing-cell"><div style="font-size:22px;margin-bottom:4px">🏘️</div><div style="font-weight:600;font-size:13px;margin-bottom:2px">Community Spotlight</div><div style="font-family:var(--mono);font-size:10px;color:var(--muted)">Thursdays</div></div>
+    <div class="landing-cell"><div style="font-size:22px;margin-bottom:4px">🏠</div><div style="font-weight:600;font-size:13px;margin-bottom:2px">Weekend Real Estate</div><div style="font-family:var(--mono);font-size:10px;color:var(--muted)">Fridays</div></div>
+    <div class="landing-cell"><div style="font-size:22px;margin-bottom:4px">✍️</div><div style="font-weight:600;font-size:13px;margin-bottom:2px">Blog Teaser</div><div style="font-family:var(--mono);font-size:10px;color:var(--muted)">Wednesdays</div></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     PAGE: SETUP (Step 1)
+═══════════════════════════════════════════ -->
+<div class="page" id="pageSetup">
+  <div class="container">
+    <div class="label">Step 1 of 4</div>
+    <h1 class="display fu" style="font-size:clamp(28px,4vw,40px);margin-bottom:8px">What are we creating?</h1>
+    <p style="color:var(--muted);font-size:14px;margin-bottom:28px;line-height:1.65">Choose your post type and geographic focus for this week.</p>
+
+    <div class="card">
+      <div class="label">Post Type</div>
+      <div class="type-grid" id="typeGrid">
+        <button class="type-btn" data-type="market_monday" onclick="selectType(this)"><div class="type-emoji">📊</div><div class="type-name">Market Monday</div><div class="type-day">Tuesdays</div></button>
+        <button class="type-btn" data-type="community" onclick="selectType(this)"><div class="type-emoji">🏘️</div><div class="type-name">Community Spotlight</div><div class="type-day">Thursdays</div></button>
+        <button class="type-btn" data-type="weekend_re" onclick="selectType(this)"><div class="type-emoji">🏠</div><div class="type-name">Weekend Real Estate</div><div class="type-day">Fridays</div></button>
+        <button class="type-btn" data-type="blog_teaser" onclick="selectType(this)"><div class="type-emoji">✍️</div><div class="type-name">Blog Teaser</div><div class="type-day">Wednesdays</div></button>
+      </div>
+    </div>
+
+    <div class="card fu" id="geoCard" style="display:none">
+      <div class="label">Geographic Focus</div>
+      <button class="scope-btn" data-scope="northern_utah" onclick="selectScope(this)">
+        <div><div style="font-weight:600;font-size:14px">Northern Utah County</div><div style="font-size:12px;color:var(--muted);margin-top:2px">Lehi · SS · EM · AF</div></div>
+        <div class="scope-dot"></div>
+      </button>
+      <button class="scope-btn" data-scope="both_counties" onclick="selectScope(this)">
+        <div><div style="font-weight:600;font-size:14px">Utah + Salt Lake Counties</div><div style="font-size:12px;color:var(--muted);margin-top:2px">Regional — events &amp; broad trends</div></div>
+        <div class="scope-dot"></div>
+      </button>
+      <button class="scope-btn" data-scope="single" onclick="selectScope(this)">
+        <div><div style="font-weight:600;font-size:14px">Single City</div><div style="font-size:12px;color:var(--muted);margin-top:2px">Tight local focus</div></div>
+        <div class="scope-dot"></div>
+      </button>
+      <div class="city-wrap" id="cityWrap" style="display:none">
+        <button class="city-pill" onclick="selectCity(this)">Lehi</button>
+        <button class="city-pill" onclick="selectCity(this)">Saratoga Springs</button>
+        <button class="city-pill" onclick="selectCity(this)">Eagle Mountain</button>
+        <button class="city-pill" onclick="selectCity(this)">American Fork</button>
+        <button class="city-pill" onclick="selectCity(this)">Pleasant Grove</button>
+        <button class="city-pill" onclick="selectCity(this)">Highland</button>
+        <button class="city-pill" onclick="selectCity(this)">Alpine</button>
+      </div>
+    </div>
+
+    <div class="card fu" id="voiceRefCard" style="display:none">
+      <div class="label">Recent Voice Reference</div>
+      <div id="voiceRefContent"></div>
+    </div>
+
+    <button class="btn btn-gold btn-lg" id="step1Next" onclick="goStep2()" disabled>Continue →</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     PAGE: TRENDS + INPUT (Step 2)
+═══════════════════════════════════════════ -->
+<div class="page" id="pageTrends">
+  <div class="container">
+    <div class="label">Step 2 of 4</div>
+    <h1 class="display fu" style="font-size:clamp(28px,4vw,40px);margin-bottom:8px">Set the stage</h1>
+    <p style="color:var(--muted);font-size:14px;margin-bottom:28px;line-height:1.65">Pick a trending hook and share what's on your mind this week.</p>
+
+    <!-- Trending -->
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+        <div class="label" style="margin:0">Trending This Week</div>
+        <div id="trendLoading" style="display:none;font-size:11px;color:var(--muted);display:flex;align-items:center;gap:6px"><span class="spinner" style="width:12px;height:12px"></span>Scanning...</div>
+      </div>
+      <div id="trendCards"></div>
+      <div class="field" style="margin-top:8px;margin-bottom:0">
+        <input type="text" id="customTrend" placeholder="Or describe your own hook for this week..."/>
+      </div>
+    </div>
+
+    <!-- Questions -->
+    <div id="questionsWrap"></div>
+
+    <button class="btn btn-gold btn-lg" id="step2Next" onclick="goGenerate()">Generate Variations →</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     PAGE: GENERATING (Step 3)
+═══════════════════════════════════════════ -->
+<div class="page" id="pageGenerating">
+  <div style="min-height:80vh;display:flex;align-items:center;justify-content:center;padding:24px">
+    <div class="card card-glow fu" style="max-width:380px;width:100%;padding:40px;text-align:center">
+      <h2 class="display" style="font-size:32px;margin-bottom:22px">Creating your posts</h2>
+      <div class="progress-track"><div class="progress-fill" id="genProgress" style="width:0%"></div></div>
+      <div style="display:flex;align-items:center;justify-content:center;gap:8px;color:var(--muted);font-size:13px">
+        <span class="spinner" style="width:14px;height:14px"></span>
+        <span id="genStatus">Fetching market data...</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     PAGE: REVIEW (Step 4)
+═══════════════════════════════════════════ -->
+<div class="page" id="pageReview">
+  <div class="container-wide">
+    <div style="display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:28px;flex-wrap:wrap;gap:12px">
+      <div>
+        <div class="label">Step 4 of 4</div>
+        <h1 class="display" style="font-size:36px;font-weight:500">Review &amp; Approve</h1>
+        <div style="color:var(--muted);font-size:13px;margin-top:4px" id="reviewMeta"></div>
+      </div>
+      <div class="var-tabs" id="varTabs"></div>
+    </div>
+
+    <div class="review-grid">
+      <!-- Left -->
+      <div>
+        <div class="rank-box" id="rankBox">
+          <div class="label" id="rankLabel" style="margin-bottom:5px"></div>
+          <div id="rankText" style="font-size:13px;line-height:1.6"></div>
+        </div>
+
+        <div class="plat-tabs">
+          <button class="plat-tab active" onclick="switchPlat('fb',this)">Facebook</button>
+          <button class="plat-tab" onclick="switchPlat('ig',this)">Instagram</button>
+        </div>
+
+        <div class="card" style="border-radius:0 0 10px 10px;border-top:none">
+          <div id="fbPanel">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+              <div class="label" style="margin:0">Facebook Caption</div>
+              <span class="word-count" id="fbWords">0 words</span>
+            </div>
+            <textarea id="fbCaption" rows="9" oninput="updateWordCount()"></textarea>
+            <div style="margin-top:8px;font-size:12px;color:var(--muted)">First comment: <span style="color:var(--gold);font-family:var(--mono)" id="firstCommentDisplay"></span></div>
+          </div>
+          <div id="igPanel" style="display:none">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+              <div class="label" style="margin:0">Instagram Caption</div>
+              <span class="word-count" id="igWords">0 words</span>
+            </div>
+            <textarea id="igCaption" rows="9" oninput="updateWordCount()"></textarea>
+            <div style="margin-top:10px;display:flex;flex-wrap:wrap;gap:6px" id="hashtagDisplay"></div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="label">Voice Note <span style="color:var(--faint);font-weight:400">(optional)</span></div>
+          <textarea id="voiceNote" rows="2" placeholder='What did you change and why? e.g. "Too formal" or "Needed more energy" — helps future posts match your voice.'></textarea>
+          <div class="hint">Saved to voice library · improves future generations</div>
+        </div>
+      </div>
+
+      <!-- Right -->
+      <div>
+        <!-- Image -->
+        <div class="card">
+          <div class="label">Image</div>
+          <div class="img-placeholder">
+            <div style="font-size:28px;margin-bottom:8px" id="imgIcon">📸</div>
+            <div style="font-family:var(--mono);font-size:10px;color:var(--muted);margin-bottom:6px" id="imgSourceLabel">Sourced Photo</div>
+            <div style="font-size:11px;color:var(--faint);line-height:1.5;margin-bottom:10px" id="imgBriefDisplay"></div>
+            <button class="btn btn-outline btn-sm" onclick="openImageSource()">Open Source →</button>
+          </div>
+          <div class="field">
+            <div class="label">Edit Suggestion</div>
+            <textarea id="imgEditNote" rows="2" placeholder="Describe changes (e.g. 'More mountains, less sky')..."></textarea>
+          </div>
+          <div class="field">
+            <div class="label">Replace URL</div>
+            <input type="url" id="replaceUrl" placeholder="Paste image URL to replace..." oninput="checkReplaceUrl(this)"/>
+          </div>
+          <label style="display:flex;align-items:center;gap:8px;padding:8px 12px;background:var(--elevated);border:1px solid var(--faint);border-radius:6px;cursor:pointer;font-size:12px;color:var(--off)">
+            📁 Upload your own
+            <input type="file" accept="image/*" style="display:none" onchange="handleUpload(this)"/>
+          </label>
+        </div>
+
+        <!-- Analytics -->
+        <div class="card" id="analyticsPanel" style="display:none;border-color:var(--gold-dim)">
+          <div class="label" style="color:var(--gold)">Performance Pulse</div>
+          <div id="analyticsPanelContent"></div>
+        </div>
+
+        <!-- Schedule -->
+        <div class="card">
+          <div class="label">Schedule Time</div>
+          <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px" id="timePills"></div>
+          <div class="field">
+            <input type="text" id="schedTime" placeholder="Custom time..." style="font-family:var(--mono)"/>
+          </div>
+          <button class="btn btn-gold btn-full" id="publishBtn" onclick="publish()">Approve &amp; Schedule →</button>
+          <div style="font-size:11px;color:var(--red);text-align:center;margin-top:7px;display:none" id="noWebhookWarn">⚠ Add webhook URL in Settings first</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     PAGE: DONE
+═══════════════════════════════════════════ -->
+<div class="page" id="pageDone">
+  <div class="done-screen">
+    <div class="card card-glow done-card fu">
+      <div style="font-size:52px;margin-bottom:14px">✓</div>
+      <h2 class="display" style="font-size:34px;margin-bottom:8px">Post approved</h2>
+      <p style="color:var(--muted);font-size:14px;margin-bottom:28px">Scheduled for <strong id="doneTime" style="color:var(--gold)"></strong> · Zapier will handle Facebook and Instagram.</p>
+      <button class="btn btn-gold btn-lg" onclick="startFlow()">Create Another →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     PAGE: SESSION RESTORE
+═══════════════════════════════════════════ -->
+<div class="page" id="pageRestore">
+  <div style="min-height:80vh;display:flex;align-items:center;justify-content:center;padding:24px">
+    <div class="card card-glow fu" style="max-width:450px;width:100%;padding:36px;text-align:center">
+      <div class="label" style="margin-bottom:14px">Session Found</div>
+      <h2 class="display" style="font-size:32px;margin-bottom:10px">Welcome back, Beau</h2>
+      <p style="color:var(--muted);font-size:14px;line-height:1.65;margin-bottom:28px" id="restoreMsg"></p>
+      <div style="display:flex;gap:12px;justify-content:center">
+        <button class="btn btn-gold" onclick="continueSession()">Continue Session</button>
+        <button class="btn btn-outline" onclick="freshStart()">Start Fresh</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════
+// CONSTANTS
+// ═══════════════════════════════════════════════════════
+const POST_TYPES = {
+  market_monday: { label:'Market Monday', day:'Tuesday', emoji:'📊' },
+  community:     { label:'Community Spotlight', day:'Thursday', emoji:'🏘️' },
+  weekend_re:    { label:'Weekend Real Estate', day:'Friday', emoji:'🏠' },
+  blog_teaser:   { label:'Blog Teaser', day:'Wednesday', emoji:'✍️' },
+};
+
+const GEO_SCOPES = {
+  northern_utah: { label:'Northern Utah County', hashCtx:'Northern Utah County (Lehi, Saratoga Springs, Eagle Mountain, American Fork, Highland, Alpine, Pleasant Grove)' },
+  both_counties: { label:'Utah + Salt Lake Counties', hashCtx:'Utah County + Salt Lake County (Lehi, Saratoga Springs, Eagle Mountain, American Fork, Draper, South Jordan, Herriman, Riverton, Bluffdale, Sandy)' },
+  single:        { label:'Single City', hashCtx:'' },
+};
+
+const SUGGESTED_TIMES = {
+  market_monday: ['6:30 PM MT','7:00 PM MT','8:00 PM MT'],
+  community:     ['7:00 PM MT','7:30 PM MT','5:00 PM MT'],
+  weekend_re:    ['7:00 PM MT','9:00 AM MT','12:00 PM MT'],
+  blog_teaser:   ['12:00 PM MT','7:00 PM MT','8:00 AM MT'],
+};
+
+const POST_QUESTIONS = {
+  market_monday: [
+    { id:'q1', text:"What's one thing you noticed in the market this week?" },
+    { id:'q2', text:"Any specific price range or trend to highlight?" },
+    { id:'q3', text:"What are buyers or sellers asking you about most right now?" },
+  ],
+  community: [
+    { id:'q1', text:"Any local business, event, or neighborhood moment to highlight?" },
+    { id:'q2', text:"Anything in the community you personally experienced or heard about?" },
+    { id:'q3', text:"Anyone local worth giving a shoutout to?" },
+  ],
+  weekend_re: [
+    { id:'q1', text:"Any specific listings or open houses to feature this week?" },
+    { id:'q2', text:"Any anonymous client wins from this week?" },
+    { id:'q3', text:"What's the most interesting property you've seen recently?" },
+  ],
+  blog_teaser: [
+    { id:'blog_url', text:"Paste your blog post URL", type:'url' },
+    { id:'q2', text:"What's the one thing you most want readers to take away?" },
+  ],
+};
+
+// ═══════════════════════════════════════════════════════
+// STORAGE
+// ═══════════════════════════════════════════════════════
+const store = {
+  get: k => { try { return JSON.parse(localStorage.getItem(k)); } catch { return null; } },
+  set: (k,v) => { try { localStorage.setItem(k,JSON.stringify(v)); } catch {} },
+  rm: k => { try { localStorage.removeItem(k); } catch {} },
+  voice: () => store.get('uvh_voice') || [],
+  addVoice: e => { const l=store.voice(); l.unshift(e); store.set('uvh_voice',l.slice(0,60)); },
+  session: () => store.get('uvh_sess_v2'),
+  saveSession: d => store.set('uvh_sess_v2',d),
+  clearSession: () => store.rm('uvh_sess_v2'),
+  webhook: () => { try { return localStorage.getItem('uvh_wh')||''; } catch { return ''; } },
+  saveWebhook: u => { try { localStorage.setItem('uvh_wh',u); } catch {} },
+  analytics: () => store.get('uvh_analytics'),
+};
+
+// ═══════════════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════════════
+let flow = {
+  postType: '', geo: { scope:'northern_utah', city:'' },
+  trend: null, customTrend: '', answers: {},
+  variations: [], selVar: 0, imageUrl: '', marketData: '',
+};
+let activePlat = 'fb';
+
+// ═══════════════════════════════════════════════════════
+// UTILS
+// ═══════════════════════════════════════════════════════
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0,0);
+}
+
+function wordCount(txt) {
+  return txt.trim().split(/\s+/).filter(Boolean).length;
+}
+
+function geoLabel() {
+  if (flow.geo.scope === 'single') return flow.geo.city || 'Northern Utah County';
+  return GEO_SCOPES[flow.geo.scope]?.label || 'Northern Utah County';
+}
+
+function hashCtx() {
+  if (flow.geo.scope === 'single') return (flow.geo.city || 'Lehi') + ', Utah County';
+  return GEO_SCOPES[flow.geo.scope]?.hashCtx || '';
+}
+
+// ═══════════════════════════════════════════════════════
+// API
+// ═══════════════════════════════════════════════════════
+async function callClaude(messages, system, maxTokens=2000) {
+  const r = await fetch('https://api.anthropic.com/v1/messages', {
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({ model:'claude-sonnet-4-20250514', max_tokens:maxTokens, system, messages }),
+  });
+  if (!r.ok) throw new Error('API ' + r.status);
+  const d = await r.json();
+  return d.content.map(b => b.text||'').join('');
+}
+
+function parseJSON(raw) {
+  try { return JSON.parse(raw.replace(/```json|```/g,'').trim()); } catch { return null; }
+}
+
+// ═══════════════════════════════════════════════════════
+// SETTINGS
+// ═══════════════════════════════════════════════════════
+function toggleSettings() {
+  const bar = document.getElementById('settingsBar');
+  const isOpen = bar.classList.contains('open');
+  bar.classList.toggle('open', !isOpen);
+  if (!isOpen) document.getElementById('webhookInput').value = store.webhook();
+}
+
+function saveWebhook() {
+  const url = document.getElementById('webhookInput').value.trim();
+  store.saveWebhook(url);
+  document.getElementById('settingsBar').classList.remove('open');
+}
+
+// ═══════════════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════════════
+function init() {
+  updateVoiceCount();
+  renderAnalytics();
+  const sess = store.session();
+  if (sess?.postType) {
+    flow = { ...flow, ...sess };
+    const pt = POST_TYPES[sess.postType]?.label || '';
+    const gl = geoLabel();
+    document.getElementById('restoreMsg').innerHTML =
+      `You were working on a <strong style="color:var(--gold)">${pt}</strong> post for <strong style="color:var(--gold)">${gl}</strong>.`;
+    showPage('pageRestore');
+  } else {
+    showPage('pageLanding');
+  }
+}
+
+function continueSession() {
+  if (flow.variations?.length) showPage('pageReview'), renderReview();
+  else showPage('pageSetup'), restoreSetupUI();
+}
+
+function freshStart() {
+  store.clearSession();
+  flow = { postType:'', geo:{scope:'northern_utah',city:''}, trend:null, customTrend:'', answers:{}, variations:[], selVar:0, imageUrl:'', marketData:'' };
+  startFlow();
+}
+
+function startFlow() {
+  store.clearSession();
+  flow = { postType:'', geo:{scope:'northern_utah',city:''}, trend:null, customTrend:'', answers:{}, variations:[], selVar:0, imageUrl:'', marketData:'' };
+  document.querySelectorAll('.type-btn').forEach(b => b.classList.remove('selected'));
+  document.getElementById('geoCard').style.display = 'none';
+  document.getElementById('voiceRefCard').style.display = 'none';
+  document.getElementById('step1Next').disabled = true;
+  showPage('pageSetup');
+}
+
+function updateVoiceCount() {
+  const lib = store.voice();
+  document.getElementById('voiceCount').textContent = lib.length + ' posts in voice library';
+}
+
+function renderAnalytics() {
+  const a = store.analytics();
+  if (!a) return;
+  const strip = document.getElementById('analyticsStrip');
+  strip.style.display = 'flex';
+  document.getElementById('analyticsContent').innerHTML =
+    (a.stats||[]).map(s => `<span style="font-size:13px"><strong style="color:var(--white)">${s.value}</strong> <span style="color:var(--muted)">${s.label}</span></span>`).join('') +
+    (a.suggestion ? `<span style="font-size:12px;color:var(--gold);font-style:italic;margin-left:auto">→ ${a.suggestion}</span>` : '');
+}
+
+// ═══════════════════════════════════════════════════════
+// STEP 1: SETUP
+// ═══════════════════════════════════════════════════════
+function selectType(btn) {
+  document.querySelectorAll('.type-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  flow.postType = btn.dataset.type;
+  const geoCard = document.getElementById('geoCard');
+  geoCard.style.display = flow.postType === 'blog_teaser' ? 'none' : 'block';
+  renderVoiceRef();
+  checkStep1();
+  store.saveSession(flow);
+}
+
+function selectScope(btn) {
+  document.querySelectorAll('.scope-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  flow.geo.scope = btn.dataset.scope;
+  const cityWrap = document.getElementById('cityWrap');
+  cityWrap.style.display = flow.geo.scope === 'single' ? 'flex' : 'none';
+  if (flow.geo.scope !== 'single') flow.geo.city = '';
+  checkStep1();
+  store.saveSession(flow);
+}
+
+function selectCity(btn) {
+  document.querySelectorAll('.city-pill').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  flow.geo.city = btn.textContent;
+  checkStep1();
+  store.saveSession(flow);
+}
+
+function checkStep1() {
+  const ok = flow.postType && (flow.postType === 'blog_teaser' || flow.geo.scope !== 'single' || flow.geo.city);
+  document.getElementById('step1Next').disabled = !ok;
+}
+
+function renderVoiceRef() {
+  const lib = store.voice().filter(e => e.postType === flow.postType).slice(0,2);
+  const card = document.getElementById('voiceRefCard');
+  if (!lib.length) { card.style.display='none'; return; }
+  card.style.display = 'block';
+  document.getElementById('voiceRefContent').innerHTML = lib.map((e,i) =>
+    `<div class="voice-ref-item ${i===lib.length-1?'':''}">
+      <div style="font-family:var(--mono);font-size:10px;color:var(--muted);margin-bottom:3px">${e.date} · ${e.city||'Regional'}</div>
+      <div style="font-size:13px;color:var(--off);line-height:1.5">${e.approvedCaption.slice(0,130)}…</div>
+    </div>`
+  ).join('');
+}
+
+function restoreSetupUI() {
+  if (flow.postType) {
+    document.querySelector(`[data-type="${flow.postType}"]`)?.classList.add('selected');
+    document.getElementById('geoCard').style.display = 'block';
+  }
+  if (flow.geo.scope) {
+    document.querySelector(`[data-scope="${flow.geo.scope}"]`)?.classList.add('selected');
+    if (flow.geo.scope === 'single') {
+      document.getElementById('cityWrap').style.display = 'flex';
+      if (flow.geo.city) document.querySelectorAll('.city-pill').forEach(p => { if (p.textContent===flow.geo.city) p.classList.add('selected'); });
+    }
+  }
+  checkStep1();
+  renderVoiceRef();
+}
+
+function goStep2() {
+  store.saveSession(flow);
+  showPage('pageTrends');
+  renderQuestions();
+  fetchTrends();
+}
+
+// ═══════════════════════════════════════════════════════
+// STEP 2: TRENDS + QUESTIONS
+// ═══════════════════════════════════════════════════════
+async function fetchTrends() {
+  const gl = geoLabel();
+  const loadEl = document.getElementById('trendLoading');
+  const cardsEl = document.getElementById('trendCards');
+  loadEl.style.display = 'flex';
+  try {
+    const raw = await callClaude([{ role:'user', content:
+      `Find 3 trending topics (current week) relevant to a Utah real estate ${flow.postType} social post for ${gl}. Mix: local Utah news, RE trends, community events, non-political pop culture from past 2 weeks. Return JSON only: {"topics":[{"id":"t1","headline":"catchy short headline","why":"one sentence why this fits","hook":"how Beau could naturally reference this"}]}`
+    }], 'You are a social media strategist for a Utah realtor. Return valid JSON only.', 700);
+    const r = parseJSON(raw);
+    const topics = r?.topics || [];
+    cardsEl.innerHTML = topics.map(t => `
+      <div class="trend-card" data-id="${t.id}" onclick="selectTrend(this,'${t.id}')">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px">
+          <div style="flex:1">
+            <div style="font-weight:600;font-size:14px;margin-bottom:3px">${t.headline}</div>
+            <div style="font-size:12px;color:var(--muted);margin-bottom:3px">${t.why}</div>
+            <div style="font-size:12px;color:var(--gold);font-style:italic">${t.hook}</div>
+          </div>
+          <div class="trend-dot"></div>
+        </div>
+      </div>`).join('');
+    flow._trends = topics;
+  } catch { cardsEl.innerHTML = '<div style="color:var(--muted);font-size:13px">Could not load trending topics — skip or enter your own below.</div>'; }
+  loadEl.style.display = 'none';
+}
+
+function selectTrend(el, id) {
+  const already = el.classList.contains('selected');
+  document.querySelectorAll('.trend-card').forEach(c => c.classList.remove('selected'));
+  if (!already) {
+    el.classList.add('selected');
+    flow.trend = flow._trends?.find(t => t.id === id) || null;
+  } else {
+    flow.trend = null;
+  }
+}
+
+async function renderQuestions() {
+  const gl = geoLabel();
+  const wrap = document.getElementById('questionsWrap');
+  const qs = POST_QUESTIONS[flow.postType] || [];
+  wrap.innerHTML = qs.map((q,qi) => `
+    <div class="card fu" style="animation-delay:${qi*0.05}s">
+      <div class="label" style="font-size:13px;text-transform:none;letter-spacing:0;font-family:var(--body);font-weight:600;color:var(--white)">${q.text}</div>
+      ${q.type==='url'
+        ? `<div style="margin-top:10px"><input type="url" id="ans_${q.id}" placeholder="https://utvistahomes.com/blog/..." style="font-family:var(--mono);font-size:12px" oninput="saveAnswer('${q.id}',this.value)"/></div>`
+        : `<div id="sugg_${q.id}" style="margin-top:10px"><div style="display:flex;align-items:center;gap:6px;color:var(--muted);font-size:11px"><span class="spinner" style="width:11px;height:11px"></span>Generating suggestions...</div></div>
+           <textarea style="margin-top:6px" rows="2" id="custom_${q.id}" placeholder="Or write your own..." oninput="saveAnswer('${q.id}',this.value)"></textarea>`
+      }
+    </div>`).join('');
+
+  // Fetch suggestions for non-URL questions
+  for (const q of qs) {
+    if (q.type === 'url') continue;
+    fetchSuggestions(q, gl);
+  }
+}
+
+async function fetchSuggestions(q, gl) {
+  try {
+    const raw = await callClaude([{ role:'user', content:
+      `Generate 3 short first-person answer options for a ${flow.postType} real estate post for ${gl}, for this question: "${q.text}". Sound like Beau Gardner — warm, genuine, knowledgeable northern Utah realtor. 1-2 sentences each. Specific, not generic. JSON only: {"options":["...","...","..."]}`
+    }], 'Return valid JSON only.', 500);
+    const r = parseJSON(raw);
+    const opts = r?.options || [];
+    const el = document.getElementById(`sugg_${q.id}`);
+    if (!el) return;
+    el.innerHTML = opts.map(s => `
+      <button class="sugg-btn" onclick="pickSugg('${q.id}',this,'${s.replace(/'/g,"\\'")}')">
+        ${s}
+      </button>`).join('');
+  } catch {
+    const el = document.getElementById(`sugg_${q.id}`);
+    if (el) el.innerHTML = '';
+  }
+}
+
+function pickSugg(qid, btn, val) {
+  document.querySelectorAll(`#sugg_${qid} .sugg-btn`).forEach(b => b.classList.remove('selected'));
+  btn.classList.toggle('selected');
+  flow.answers[qid] = btn.classList.contains('selected') ? val : '';
+  const custom = document.getElementById(`custom_${qid}`);
+  if (custom) custom.value = '';
+}
+
+function saveAnswer(qid, val) {
+  flow.answers[qid] = val;
+  // Deselect suggestion buttons
+  document.querySelectorAll(`#sugg_${qid} .sugg-btn`).forEach(b => b.classList.remove('selected'));
+}
+
+function goGenerate() {
+  flow.customTrend = document.getElementById('customTrend')?.value || '';
+  store.saveSession(flow);
+  showPage('pageGenerating');
+  runGeneration();
+}
+
+// ═══════════════════════════════════════════════════════
+// STEP 3: GENERATION
+// ═══════════════════════════════════════════════════════
+function setStatus(msg, pct) {
+  document.getElementById('genStatus').textContent = msg;
+  document.getElementById('genProgress').style.width = pct + '%';
+}
+
+async function runGeneration() {
+  try {
+    const gl = geoLabel();
+    const hc = hashCtx();
+
+    setStatus('Fetching current market data...', 12);
+    const market = await callClaude([{ role:'user', content:
+      `Get the most current real estate market data for ${gl}, Utah this week. Include median prices, days on market, inventory, notable news. Be specific with real numbers. 2-3 sentences.`
+    }], 'You are a real estate market researcher. Return factual current data. Be concise.', 320);
+    flow.marketData = market;
+
+    setStatus('Processing content...', 26);
+    let blogContent = '';
+    if (flow.postType === 'blog_teaser' && flow.answers?.blog_url) {
+      try {
+        blogContent = await callClaude([{ role:'user', content:
+          `Read ${flow.answers.blog_url} and extract: title, main argument, top 3 takeaways, best quote. Plain text.`
+        }], 'Extract blog content accurately.', 400);
+      } catch { blogContent = 'Blog content unavailable — use provided takeaway.'; }
+    }
+
+    setStatus('Writing three variations...', 50);
+    const vc = store.voice().slice(0,6).map(e =>
+      `[${e.date}|${e.postType}|${e.city||'Regional'}]: "${e.approvedCaption.slice(0,160)}"${e.voiceNote?` (note: "${e.voiceNote}")`:''}`)
+      .join('\n');
+    const th = flow.trend
+      ? `Trending: "${flow.trend.headline}" — ${flow.trend.hook}`
+      : flow.customTrend
+      ? `Custom hook: "${flow.customTrend}"`
+      : 'No trending hook.';
+    const inp = Object.entries(flow.answers||{}).filter(([,v])=>v?.trim()).map(([k,v])=>`${k}: ${v}`).join('\n');
+
+    const prompt = `
+You are the social media content strategist for Utah Vista Homes. Generate 3 distinctly different post variations for Beau Gardner (Realtor, Fathom Realty) — a ${flow.postType} post.
+
+GEOGRAPHIC FOCUS: ${gl}
+HASHTAG REACH CONTEXT: ${hc}
+MARKET DATA: ${market}
+BEAU'S INPUT: ${inp || 'Use market data and community context.'}
+${blogContent ? 'BLOG CONTENT:\n' + blogContent : ''}
+TRENDING HOOK: ${th}
+BEAU'S VOICE LIBRARY:
+${vc || 'No prior posts — establish warm knowledgeable neighbor voice.'}
+
+NON-NEGOTIABLE RULES:
+- Never mention Zillow, Redfin, or any third-party listing platform
+- All links → utvistahomes.com only
+- Facebook: up to 220 words, NO URL in caption body (goes in first comment after posting)
+- Instagram: up to 180 words, EXACTLY 5 hashtags at end
+- HASHTAG STRATEGY: choose 5 hashtags that MAXIMIZE REACH — mix hyper-local, regional Utah, and high-volume real estate tags. Always include #UtahVistaHomes as one of the 5.
+- End every post with a specific local question inviting comments from ${gl} residents
+- No em dashes. Active voice. Sound like a real person who loves this community.
+- Voice balance: one warm/community-focused, one data-led authoritative, one hybrid
+
+VARIATION REQUIREMENTS:
+V1 — TOP PICK: best engagement potential, strongest balance of Beau's voice + market authority.
+V2 — DIFFERENT ANGLE: if V1 is data-led, V2 is story/community-led. Tie to past post, seasonal moment, or trending hook if relevant.
+V3 — BOLDEST CHOICE: most distinct — carousel, contrarian take, pop culture tie-in, hyperlocal angle, or seasonal hook.
+
+Return JSON only, no markdown:
+{"variations":[{"id":"v1","angle":"4-word label","rankReason":"one sentence why this is the top recommendation","fbCaption":"full facebook caption","igCaption":"full instagram caption with 5 hashtags","hashtags":["tag1","tag2","tag3","tag4","tag5"],"firstCommentLink":"https://utvistahomes.com","imageBrief":"SOURCED: [specific free image search query] OR GENERATED: [description] OR CAROUSEL: [slide details]","format":"standard or carousel"}]}`;
+
+    const raw = await callClaude([{ role:'user', content:prompt }],
+      'You are a social media strategist for a Utah real estate agent. Return valid JSON only.', 3500);
+    const result = parseJSON(raw);
+
+    setStatus('Sourcing images...', 78);
+    const variations = (result?.variations || []).map(v => {
+      const b = v.imageBrief || '';
+      let imageUrl = 'https://www.pexels.com/search/utah+real+estate/';
+      let imageSource = 'pexels';
+      if (b.startsWith('SOURCED:')) { imageUrl = `https://www.pexels.com/search/${encodeURIComponent(b.replace('SOURCED:','').trim())}/`; imageSource = 'pexels'; }
+      else if (b.startsWith('GENERATED:')) { imageUrl = `https://www.pexels.com/search/${encodeURIComponent('utah '+v.angle)}/`; imageSource = 'generate'; }
+      else if (b.startsWith('CAROUSEL:')) { imageUrl = `https://www.pexels.com/search/${encodeURIComponent('utah homes community')}/`; imageSource = 'carousel'; }
+      return { ...v, imageUrl, imageSource };
+    });
+
+    flow.variations = variations;
+    flow.selVar = 0;
+    flow.imageUrl = variations[0]?.imageUrl || '';
+    store.saveSession(flow);
+
+    document.getElementById('genProgress').style.width = '100%';
+    setTimeout(() => { showPage('pageReview'); renderReview(); }, 400);
+
+  } catch(e) {
+    document.getElementById('genStatus').textContent = 'Error: ' + e.message + '. Please go back and try again.';
+  }
+}
+
+// ═══════════════════════════════════════════════════════
+// STEP 4: REVIEW
+// ═══════════════════════════════════════════════════════
+function renderReview() {
+  const pt = POST_TYPES[flow.postType];
+  document.getElementById('reviewMeta').textContent = `${pt?.label} · ${geoLabel()}`;
+
+  renderVarTabs();
+  renderVariation(flow.selVar);
+  renderTimePills();
+  renderAnalyticsPanel();
+
+  const noWarn = document.getElementById('noWebhookWarn');
+  noWarn.style.display = store.webhook() ? 'none' : 'block';
+}
+
+function renderVarTabs() {
+  document.getElementById('varTabs').innerHTML = flow.variations.map((v,i) => `
+    <button class="var-tab ${i===flow.selVar?'selected':''}" onclick="selectVar(${i})">
+      <span class="vt-num">V${i+1}</span>
+      <span class="vt-angle">${v.angle}</span>
+      ${i===0?'<span class="chip" style="font-size:9px;padding:1px 5px">Top pick</span>':''}
+    </button>`).join('');
+}
+
+function selectVar(idx) {
+  flow.selVar = idx;
+  flow.imageUrl = flow.variations[idx]?.imageUrl || '';
+  renderVarTabs();
+  renderVariation(idx);
+}
+
+function renderVariation(idx) {
+  const v = flow.variations[idx];
+  if (!v) return;
+
+  // Rank box
+  const rankBox = document.getElementById('rankBox');
+  const rankLabel = document.getElementById('rankLabel');
+  const rankText = document.getElementById('rankText');
+  if (idx === 0) {
+    rankBox.className = 'rank-box top';
+    rankLabel.textContent = 'Why this is the top pick';
+    rankText.textContent = v.rankReason;
+  } else {
+    rankBox.className = 'rank-box other';
+    rankLabel.textContent = 'Angle';
+    rankText.textContent = v.angle;
+  }
+
+  // Captions
+  document.getElementById('fbCaption').value = v.fbCaption || '';
+  document.getElementById('igCaption').value = v.igCaption || '';
+  document.getElementById('firstCommentDisplay').textContent = v.firstCommentLink || 'https://utvistahomes.com';
+
+  // Hashtags
+  document.getElementById('hashtagDisplay').innerHTML = (v.hashtags||[]).map(h =>
+    `<span class="chip chip-blue">#${h.replace(/^#/,'')}</span>`).join('');
+
+  // Image
+  const icons = { pexels:'📸', generate:'🎨', carousel:'📱' };
+  const labels = { pexels:'Sourced Photo', generate:'AI Generated', carousel:'Carousel Format' };
+  document.getElementById('imgIcon').textContent = icons[v.imageSource] || '📸';
+  document.getElementById('imgSourceLabel').textContent = labels[v.imageSource] || 'Sourced Photo';
+  document.getElementById('imgBriefDisplay').textContent = (v.imageBrief||'').slice(0,100) + '...';
+
+  updateWordCount();
+}
+
+function switchPlat(plat, btn) {
+  activePlat = plat;
+  document.querySelectorAll('.plat-tab').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('fbPanel').style.display = plat==='fb' ? 'block' : 'none';
+  document.getElementById('igPanel').style.display = plat==='ig' ? 'block' : 'none';
+  updateWordCount();
+}
+
+function updateWordCount() {
+  const fb = document.getElementById('fbCaption')?.value || '';
+  const ig = document.getElementById('igCaption')?.value || '';
+  document.getElementById('fbWords').textContent = wordCount(fb) + ' words';
+  document.getElementById('igWords').textContent = wordCount(ig) + ' words';
+}
+
+function renderTimePills() {
+  const times = SUGGESTED_TIMES[flow.postType] || [];
+  document.getElementById('timePills').innerHTML = times.map((t,i) => `
+    <button class="time-pill" onclick="selectTime('${t}',this)">
+      ${t}${i===0?' ★':''}
+    </button>`).join('');
+}
+
+function selectTime(t, btn) {
+  document.querySelectorAll('.time-pill').forEach(p => p.classList.remove('selected'));
+  btn.classList.add('selected');
+  document.getElementById('schedTime').value = t;
+}
+
+function renderAnalyticsPanel() {
+  const a = store.analytics();
+  const panel = document.getElementById('analyticsPanel');
+  if (!a) { panel.style.display='none'; return; }
+  panel.style.display = 'block';
+  document.getElementById('analyticsPanelContent').innerHTML =
+    (a.stats||[]).map(s => `<div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:6px"><span style="color:var(--muted)">${s.label}</span><span style="font-weight:600">${s.value}</span></div>`).join('') +
+    (a.topPost ? `<div class="divider"></div><div class="label">Top post</div><div style="font-size:12px;color:var(--off);line-height:1.5">${a.topPost}</div>` : '') +
+    (a.suggestion ? `<div style="margin-top:10px;font-size:12px;color:var(--gold);font-style:italic;line-height:1.5">→ ${a.suggestion}</div>` : '');
+}
+
+function openImageSource() {
+  if (flow.imageUrl) window.open(flow.imageUrl, '_blank');
+}
+
+function checkReplaceUrl(inp) {
+  if (inp.value.startsWith('http')) flow.imageUrl = inp.value;
+}
+
+function handleUpload(inp) {
+  const f = inp.files?.[0];
+  if (f) flow.imageUrl = URL.createObjectURL(f);
+}
+
+// ═══════════════════════════════════════════════════════
+// PUBLISH
+// ═══════════════════════════════════════════════════════
+async function publish() {
+  const webhook = store.webhook();
+  if (!webhook) { document.getElementById('noWebhookWarn').style.display='block'; return; }
+  const sched = document.getElementById('schedTime').value.trim();
+  if (!sched) { alert('Please select or enter a schedule time.'); return; }
+
+  const btn = document.getElementById('publishBtn');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner" style="width:14px;height:14px"></span> Sending...';
+
+  const v = flow.variations[flow.selVar];
+  const payload = {
+    postType: flow.postType,
+    geo: geoLabel(),
+    fbCaption: document.getElementById('fbCaption').value,
+    igCaption: document.getElementById('igCaption').value,
+    firstCommentLink: v?.firstCommentLink || 'https://utvistahomes.com',
+    imageUrl: flow.imageUrl,
+    scheduleTime: sched,
+    hashtags: v?.hashtags || [],
+    format: v?.format || 'standard',
+    approvedAt: new Date().toISOString(),
+  };
+
+  // Use text/plain to avoid CORS preflight on sandboxed environments
+  // Zapier receives and parses the JSON body correctly regardless of content-type
+  try {
+    await fetch(webhook, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'text/plain' },
+      body: JSON.stringify(payload),
+    });
+  } catch(e) {
+    console.log('Webhook sent (no-cors):', e?.message || 'ok');
+  }
+
+  // Save to voice library
+  store.addVoice({
+    postType: flow.postType,
+    city: geoLabel(),
+    approvedCaption: document.getElementById('fbCaption').value,
+    igCaption: document.getElementById('igCaption').value,
+    imageUrl: flow.imageUrl,
+    voiceNote: document.getElementById('voiceNote').value,
+    date: new Date().toLocaleDateString('en-US'),
+    angle: v?.angle,
+  });
+
+  store.clearSession();
+  updateVoiceCount();
+
+  document.getElementById('doneTime').textContent = sched;
+  btn.disabled = false;
+  btn.innerHTML = 'Approve &amp; Schedule →';
+  showPage('pageDone');
+}
+
+// ═══════════════════════════════════════════════════════
+// START
+// ═══════════════════════════════════════════════════════
+init();
+</script>
+</body>
+</html>
