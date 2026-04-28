@@ -667,21 +667,16 @@ function resolveSourceUrl(srcName) {
   return '';
 }
 
-// This key is safe here because the GitHub repo is private and only Beau uses this tool
-const ANTHROPIC_API_KEY = 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;
-const OPENAI_API_KEY = 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; // platform.openai.com
-const PEXELS_API_KEY = Ha6kPeugx7h7LsklcKh5Tu6R4FMOvEgp0OEwCkvXDjCGGY5ppAZJYZki;  // pexels.com/api
+// All API calls route through Cloudflare Worker — no keys in this file
+const WORKER_URL = 'https://uvh-proxy.beaucg55.workers.dev/';
+const PEXELS_API_KEY = Ha6kPeugx7h7LsklcKh5Tu6R4FMOvEgp0OEwCkvXDjCGGY5ppAZJYZki; // pexels.com/api — add yours here
 
 async function callClaude(messages, system, maxTokens=2000) {
-  const r = await fetch('https://api.anthropic.com/v1/messages', {
+  const r = await fetch(WORKER_URL, {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'x-api-key': ANTHROPIC_API_KEY,
-      'anthropic-version': '2023-06-01',
-      'anthropic-dangerous-direct-browser-access': 'true',
-    },
+    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
+      api: 'anthropic',
       model: 'claude-sonnet-4-20250514',
       max_tokens: maxTokens,
       system,
@@ -1495,13 +1490,11 @@ async function generateImage() {
   if (status) { status.style.display = 'block'; status.textContent = 'Sending to DALL-E 3 — usually takes 10-15 seconds...'; }
 
   try {
-    const r = await fetch('https://api.openai.com/v1/images/generations', {
+    const r = await fetch(WORKER_URL, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + OPENAI_API_KEY,
-      },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
+        api: 'openai',
         model: 'dall-e-3',
         prompt: prompt,
         n: 1,
