@@ -540,14 +540,27 @@ function hashCtx() {
 // API
 // ═══════════════════════════════════════════════════════
 async function callClaude(messages, system, maxTokens=2000) {
-  const r = await fetch('https://uvh-proxy.beaucg55.workers.dev/', {
-    method:'POST',
-    headers:{'Content-Type':'application/json'},
-    body: JSON.stringify({ model:'claude-sonnet-4-20250514', max_tokens:maxTokens, system, messages }),
-  });
-  if (!r.ok) throw new Error('API ' + r.status);
-  const d = await r.json();
-  return d.content.map(b => b.text||'').join('');
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 30000); // 30s timeout
+  try {
+    const r = await fetch('https://uvh-proxy.beaucg55.workers.dev/', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ model:'claude-sonnet-4-20250514', max_tokens:maxTokens, system, messages }),
+      signal: controller.signal,
+    });
+    clearTimeout(timeout);
+    if (!r.ok) {
+      const errText = await r.text().catch(() => 'unknown');
+      throw new Error('API ' + r.status + ': ' + errText.slice(0,100));
+    }
+    const d = await r.json();
+    if (d.error) throw new Error(d.error.message || JSON.stringify(d.error));
+    return d.content.map(b => b.text||'').join('');
+  } catch(e) {
+    clearTimeout(timeout);
+    throw e;
+  }
 }
 
 function parseJSON(raw) {
@@ -740,7 +753,10 @@ async function fetchTrends() {
         </div>
       </div>`).join('');
     flow._trends = topics;
-  } catch { cardsEl.innerHTML = '<div style="color:var(--muted);font-size:13px">Could not load trending topics — skip or enter your own below.</div>'; }
+  } catch(e) {
+    console.warn('fetchTrends error:', e.message);
+    cardsEl.innerHTML = '<div style="color:var(--muted);font-size:13px">Could not load trending topics — skip or enter your own below.</div>';
+  }
   loadEl.style.display = 'none';
 }
 
@@ -769,53 +785,108 @@ async function renderQuestions() {
       }
     </div>`).join('');
 
-  // Fetch suggestions for non-URL questions
-  for (const q of qs) {
-    if (q.type === 'url') continue;
-    fetchSuggestions(q, gl);
-  }
+  // Fetch suggestions sequentially to avoid rate limiting
+  (async function() {
+    for (const q of qs) {
+      if (q.type === 'url') continue;
+      await fetchSuggestions(q, gl);
+      // Small delay between requests to avoid concurrent rate limiting
+      await new Promise(resolve => setTimeout(resolve, 600));
+    }
+  })();
 }
 
 async function fetchSuggestions(q, gl) {
-  try {
-    const today = todayDate();
-    const prompt = 'Today is ' + today + '. Search the web for current real information about ' + gl + ' Utah real estate to answer this question with 3 specific factual first-person options: ' + q.text + '. Each option must reference real current data or something actually happening in ' + gl + ' right now. Sound like Beau Gardner: warm, genuine, knowledgeable northern Utah realtor. 1-2 sentences each. Include a source URL for each so Beau can verify. JSON only: {"options":[{"text":"first person answer with real current data","sourceUrl":"https://real-source.com","sourceName":"Source Name"}]}';
-    const raw = await callClaude([{ role:'user', content: prompt }],
-      'You are a Utah real estate market researcher. Search for real current data. Return valid JSON only.', 800);
-    const r = parseJSON(raw);
-    const opts = r?.options || [];
-    const el = document.getElementById('sugg_' + q.id);
-    if (!el) return;
-    const html = opts.map(function(o) {
-      const text = typeof o === 'string' ? o : (o.text || '');
-      const sourceUrl = typeof o === 'object' ? (o.sourceUrl || '') : '';
-      const sourceName = typeof o === 'object' ? (o.sourceName || 'View source') : 'View source';
-      const safeVal = text.replace(/\\/g,'\\\\').replace(/'/g,"\\'");
-      let btn = '<button class=\'sugg-btn\' onclick=\'pickSugg("' + q.id + '",this,"' + safeVal + '")\'>';
-      btn += '<div>' + text + '</div>';
-      if (sourceUrl) {
-        btn += '<div style=\'margin-top:5px\'><a href=\'';
-        btn += sourceUrl + '\' target=\'_blank\' rel=\'noopener\' ';
-        btn += 'style=\'font-size:11px;color:var(--blue);text-decoration:none;font-family:var(--mono)\' ';
-        btn += 'onclick=\'event.stopPropagation()\'>&#8599; ' + sourceName + '</a></div>';
+  const maxRetries = 2;
+  for (let attempt = 0; attempt <= maxRetries; attempt++) {
+    try {
+      const today = todayDate();
+      const prompt = 'Today is ' + today + '. Generate 3 specific first-person answer options for a Utah real estate post for ' + gl + ', for this question: ' + q.text + '. Sound like Beau Gardner: warm, genuine, knowledgeable northern Utah realtor. 1-2 sentences each. For sourceUrl: ONLY include a URL if you are certain it exists. Prefer only these trusted domains: freddiemac.com, nar.realtor, redfin.com, utah.gov, utahrealtors.com, census.gov, or major news outlets like deseretnews.com or ksl.com. Never guess at local government or small organization URLs. If unsure, set sourceUrl to empty string. JSON only: {"options":[{"text":"answer text","sourceUrl":"verified url or empty string","sourceName":"site name or empty string"}]}';
+      const raw = await callClaude([{ role:'user', content: prompt }],
+        'You are a Utah real estate content assistant. Only use sourceUrl for URLs you are certain exist on trusted domains. When in doubt leave sourceUrl empty. Return valid JSON only.', 800);
+      const r = parseJSON(raw);
+      const opts = r ? (r.options || []) : [];
+      const el = document.getElementById('sugg_' + q.id);
+      if (!el) return;
+
+      // Build buttons using data attributes to avoid escaping issues
+      el.innerHTML = '';
+      opts.forEach(function(o, idx) {
+        const text = typeof o === 'string' ? o : (o.text || '');
+        const sourceUrl = typeof o === 'object' ? (o.sourceUrl || '') : '';
+        const sourceName = typeof o === 'object' ? (o.sourceName || '') : '';
+        if (!text) return;
+
+        const btn = document.createElement('button');
+        btn.className = 'sugg-btn';
+        btn.dataset.qid = q.id;
+        btn.dataset.val = text;
+        btn.onclick = function() { pickSuggBtn(this); };
+
+        const textDiv = document.createElement('div');
+        textDiv.textContent = text;
+        btn.appendChild(textDiv);
+
+        if (sourceUrl && sourceUrl.length > 5) {
+          const srcDiv = document.createElement('div');
+          srcDiv.style.cssText = 'margin-top:6px;display:flex;align-items:center;gap:6px';
+
+          const label = document.createElement('span');
+          label.style.cssText = 'font-size:10px;color:var(--muted);font-family:var(--mono)';
+          label.textContent = 'source:';
+          srcDiv.appendChild(label);
+
+          const link = document.createElement('a');
+          link.href = sourceUrl;
+          link.target = '_blank';
+          link.rel = 'noopener';
+          link.style.cssText = 'font-size:11px;color:var(--blue);text-decoration:none;font-family:var(--mono)';
+          link.textContent = '↗ ' + (sourceName || sourceUrl.replace(/https?:\/\//, '').split('/')[0]);
+          link.onclick = function(e) { e.stopPropagation(); };
+          srcDiv.appendChild(link);
+
+          const warn = document.createElement('span');
+          warn.title = 'Always verify this link before using the data';
+          warn.style.cssText = 'font-size:10px;color:var(--gold);cursor:help';
+          warn.textContent = '⚠ verify';
+          srcDiv.appendChild(warn);
+
+          btn.appendChild(srcDiv);
+        }
+
+        el.appendChild(btn);
+      });
+
+      return; // success
+    } catch(e) {
+      console.warn('fetchSuggestions attempt', attempt + 1, 'failed:', e.message);
+      if (attempt < maxRetries) {
+        await new Promise(function(resolve) { setTimeout(resolve, 1000 * (attempt + 1)); });
+      } else {
+        const el = document.getElementById('sugg_' + q.id);
+        if (el) el.innerHTML = '<div style="font-size:12px;color:var(--muted);padding:4px 0">Could not load suggestions — use the field below.</div>';
       }
-      btn += '</button>';
-      return btn;
-    }).join('');
-    el.innerHTML = html;
-  } catch(e) {
-    console.warn('fetchSuggestions error:', e);
-    const el = document.getElementById('sugg_' + q.id);
-    if (el) el.innerHTML = '';
+    }
   }
 }
 
 
 function pickSugg(qid, btn, val) {
-  document.querySelectorAll(`#sugg_${qid} .sugg-btn`).forEach(b => b.classList.remove('selected'));
+  document.querySelectorAll('#sugg_' + qid + ' .sugg-btn').forEach(function(b) { b.classList.remove('selected'); });
   btn.classList.toggle('selected');
   flow.answers[qid] = btn.classList.contains('selected') ? val : '';
-  const custom = document.getElementById(`custom_${qid}`);
+  const custom = document.getElementById('custom_' + qid);
+  if (custom) custom.value = '';
+}
+
+// Used by dynamically created buttons with data attributes
+function pickSuggBtn(btn) {
+  const qid = btn.dataset.qid;
+  const val = btn.dataset.val;
+  document.querySelectorAll('#sugg_' + qid + ' .sugg-btn').forEach(function(b) { b.classList.remove('selected'); });
+  btn.classList.toggle('selected');
+  flow.answers[qid] = btn.classList.contains('selected') ? val : '';
+  const custom = document.getElementById('custom_' + qid);
   if (custom) custom.value = '';
 }
 
