@@ -128,6 +128,11 @@ nav{border-bottom:1px solid var(--gold-border);padding:18px 32px;display:flex;ju
 
 /* Image panel */
 .img-placeholder{background:var(--bg);border-radius:7px;aspect-ratio:1/1;display:flex;flex-direction:column;align-items:center;justify-content:center;border:1px solid var(--faint);padding:14px;margin-bottom:12px;text-align:center}
+.img-preview{width:100%;aspect-ratio:1/1;object-fit:cover;border-radius:7px;display:block;margin-bottom:10px;border:1px solid var(--faint)}
+.img-tabs{display:flex;gap:0;border-bottom:1px solid var(--faint);margin-bottom:12px}
+.img-tab{padding:8px 14px;background:transparent;border:none;border-bottom:2px solid transparent;color:var(--muted);font-size:12px;font-weight:600;cursor:pointer;font-family:var(--mono);letter-spacing:0.05em;transition:all 0.15s;margin-bottom:-1px}
+.img-tab.active{border-bottom-color:var(--gold);color:var(--gold)}
+.img-status{font-size:11px;color:var(--muted);text-align:center;padding:8px 0;font-style:italic}
 
 /* Time pills */
 .time-pill{background:var(--elevated);border:1px solid var(--faint);border-radius:5px;padding:7px 11px;color:var(--muted);font-size:11px;font-family:var(--mono);cursor:pointer;transition:all 0.15s;display:inline-flex;align-items:center;gap:4px}
@@ -147,6 +152,15 @@ nav{border-bottom:1px solid var(--gold-border);padding:18px 32px;display:flex;ju
 /* Voice note hint */
 .hint{font-size:11px;color:var(--faint);margin-top:5px}
 .back-btn{display:inline-flex;align-items:center;gap:6px;background:none;border:none;color:var(--muted);font-size:13px;font-weight:500;cursor:pointer;padding:0;margin-bottom:20px;transition:color 0.15s;font-family:var(--body)}
+.brief-row{display:flex;justify-content:space-between;align-items:baseline;padding:7px 0;border-bottom:1px solid var(--faint);gap:12px}
+.brief-row:last-child{border-bottom:none}
+.brief-label{font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;flex-shrink:0;width:130px}
+.brief-val{font-size:13px;line-height:1.5;flex:1;text-align:right}
+.brief-src{font-size:11px;color:#3D9E6A;font-family:var(--mono);text-decoration:none;margin-left:6px}
+.brief-src:hover{text-decoration:underline}
+.color-key{display:flex;gap:16px;margin-top:12px;padding-top:10px;border-top:1px solid var(--faint);flex-wrap:wrap}
+.key-item{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--muted)}
+.key-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
 .back-btn:hover{color:var(--off)}
 
 /* Word count */
@@ -274,17 +288,40 @@ nav{border-bottom:1px solid var(--gold-border);padding:18px 32px;display:flex;ju
     <h1 class="display fu" style="font-size:clamp(28px,4vw,40px);margin-bottom:8px">Set the stage</h1>
     <p style="color:var(--muted);font-size:14px;margin-bottom:28px;line-height:1.65">Pick a trending hook and share what's on your mind this week.</p>
 
+    <!-- Market Brief — Market Monday only -->
+    <div class="card" id="marketBriefCard" style="display:none;margin-bottom:14px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+        <div style="font-size:13px;font-weight:700;color:#C8BFA8;font-family:var(--body)" id="briefTitle">Market Brief</div>
+        <div id="briefLoading" style="font-size:11px;color:var(--muted);display:flex;align-items:center;gap:6px"><span class="spinner" style="width:12px;height:12px"></span>Loading brief...</div>
+      </div>
+      <div id="briefContent"></div>
+      <div class="color-key">
+        <div class="key-item"><div class="key-dot" style="background:#3D9E6A"></div>Sourced data</div>
+        <div class="key-item"><div class="key-dot" style="background:#D4A843"></div>Estimated / assumption</div>
+        <div class="key-item"><div class="key-dot" style="background:#4A92C6"></div>Source link</div>
+      </div>
+      <!-- Review gate — hidden until brief loads -->
+      <div id="briefReviewRow" style="display:none;align-items:center;gap:10px;margin-top:14px;padding-top:12px;border-top:1px solid var(--faint)">
+        <input type="checkbox" id="briefReviewCheck" style="width:18px;height:18px;cursor:pointer;accent-color:var(--gold)" onchange="if(this.checked) onBriefReviewed()"/>
+        <label for="briefReviewCheck" style="font-size:13px;color:var(--off);cursor:pointer">Brief reviewed — load trending topics and questions</label>
+      </div>
+    </div>
+
+    <!-- Trending + Questions — hidden until brief reviewed on Market Monday -->
+    <div id="trendSection">
     <!-- Trending -->
     <div class="card">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
         <div class="label" style="margin:0">Trending This Week</div>
         <div id="trendLoading" style="display:none;font-size:11px;color:var(--muted);display:flex;align-items:center;gap:6px"><span class="spinner" style="width:12px;height:12px"></span>Scanning...</div>
       </div>
-      <div id="trendCards"></div>
+      <div id="trendCards"><div style="color:var(--muted);font-size:13px;padding:4px 0">Loading trending topics...</div></div>
       <div class="field" style="margin-top:8px;margin-bottom:0">
         <input type="text" id="customTrend" placeholder="Or describe your own hook for this week..."/>
       </div>
     </div>
+
+    </div><!-- end trendSection -->
 
     <!-- Questions -->
     <div id="questionsWrap"></div>
@@ -367,25 +404,54 @@ nav{border-bottom:1px solid var(--gold-border);padding:18px 32px;display:flex;ju
       <div>
         <!-- Image -->
         <div class="card">
-          <div class="label">Image</div>
-          <div class="img-placeholder">
-            <div style="font-size:28px;margin-bottom:8px" id="imgIcon">📸</div>
-            <div style="font-family:var(--mono);font-size:10px;color:var(--muted);margin-bottom:6px" id="imgSourceLabel">Sourced Photo</div>
-            <div style="font-size:11px;color:var(--faint);line-height:1.5;margin-bottom:10px" id="imgBriefDisplay"></div>
-            <button class="btn btn-outline btn-sm" onclick="openImageSource()">Open Source →</button>
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+            <div class="label" style="margin:0">Image</div>
+            <span id="imgTypeTag" class="chip chip-muted">—</span>
           </div>
-          <div class="field">
-            <div class="label">Edit Suggestion</div>
-            <textarea id="imgEditNote" rows="2" placeholder="Describe changes (e.g. 'More mountains, less sky')..."></textarea>
+
+          <!-- Preview area -->
+          <div id="imgPreviewWrap" style="margin-bottom:10px">
+            <div id="imgLoadingState" style="width:100%;aspect-ratio:1/1;background:var(--bg);border-radius:7px;border:1px solid var(--faint);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px">
+              <span class="spinner"></span>
+              <span style="font-size:12px;color:var(--muted)" id="imgLoadingText">Loading image...</span>
+            </div>
+            <img id="imgPreview" class="img-preview" src="" alt="" style="display:none" onerror="imgLoadError()"/>
           </div>
-          <div class="field">
-            <div class="label">Replace URL</div>
-            <input type="url" id="replaceUrl" placeholder="Paste image URL to replace..." oninput="checkReplaceUrl(this)"/>
+
+          <!-- Action tabs -->
+          <div class="img-tabs">
+            <button class="img-tab active" onclick="switchImgTab('source',this)">📸 Source</button>
+            <button class="img-tab" onclick="switchImgTab('generate',this)">🎨 Generate</button>
+            <button class="img-tab" onclick="switchImgTab('upload',this)">📁 Upload</button>
           </div>
-          <label style="display:flex;align-items:center;gap:8px;padding:8px 12px;background:var(--elevated);border:1px solid var(--faint);border-radius:6px;cursor:pointer;font-size:12px;color:var(--off)">
-            📁 Upload your own
-            <input type="file" accept="image/*" style="display:none" onchange="handleUpload(this)"/>
-          </label>
+
+          <!-- Source tab -->
+          <div id="imgTabSource">
+            <div style="font-size:12px;color:var(--muted);margin-bottom:8px" id="imgBriefDisplay"></div>
+            <input type="text" id="pexelsSearch" placeholder="Search Pexels (e.g. utah mountains spring)..." style="margin-bottom:8px"/>
+            <button class="btn btn-outline btn-sm btn-full" onclick="searchPexels()">Search Photos →</button>
+            <div id="pexelsResults" style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:10px"></div>
+          </div>
+
+          <!-- Generate tab -->
+          <div id="imgTabGenerate" style="display:none">
+            <div style="font-size:12px;color:var(--muted);margin-bottom:8px">Generate a branded graphic using DALL-E 3.</div>
+            <textarea id="dallePrompt" rows="3" placeholder="Describe the image you want — or click Generate to use the auto-suggested prompt..."></textarea>
+            <button class="btn btn-gold btn-full" style="margin-top:8px" onclick="generateImage()" id="generateImgBtn">Generate Image →</button>
+            <div id="imgStatus" class="img-status" style="display:none"></div>
+          </div>
+
+          <!-- Upload tab -->
+          <div id="imgTabUpload" style="display:none">
+            <div style="font-size:12px;color:var(--muted);margin-bottom:10px">Upload a photo from your device — great for Beau photos and local shots.</div>
+            <label style="display:flex;align-items:center;justify-content:center;gap:8px;padding:14px;background:var(--elevated);border:2px dashed var(--faint);border-radius:8px;cursor:pointer;font-size:13px;color:var(--off);text-align:center">
+              📁 Click to upload or drag photo here
+              <input type="file" accept="image/*" style="display:none" onchange="handleUpload(this)"/>
+            </label>
+            <div style="margin-top:10px">
+              <input type="url" id="replaceUrl" placeholder="Or paste an image URL directly..." oninput="checkReplaceUrl(this)"/>
+            </div>
+          </div>
         </div>
 
         <!-- Analytics -->
@@ -539,28 +605,96 @@ function hashCtx() {
 // ═══════════════════════════════════════════════════════
 // API
 // ═══════════════════════════════════════════════════════
-async function callClaude(messages, system, maxTokens=2000) {
-  const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), 30000); // 30s timeout
-  try {
-    const r = await fetch('https://uvh-proxy.beaucg55.workers.dev/', {
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({ model:'claude-sonnet-4-20250514', max_tokens:maxTokens, system, messages }),
-      signal: controller.signal,
-    });
-    clearTimeout(timeout);
-    if (!r.ok) {
-      const errText = await r.text().catch(() => 'unknown');
-      throw new Error('API ' + r.status + ': ' + errText.slice(0,100));
-    }
-    const d = await r.json();
-    if (d.error) throw new Error(d.error.message || JSON.stringify(d.error));
-    return d.content.map(b => b.text||'').join('');
-  } catch(e) {
-    clearTimeout(timeout);
-    throw e;
+// !! PRIVATE TOOL ONLY — replace YOUR_API_KEY with your Anthropic API key
+
+// ── Verified source URL lookup table ────────────────────────────────────────
+// Claude returns source names — we map them to known stable URLs
+// Never let Claude generate URLs — only use this table
+const SOURCE_URLS = {
+  // Redfin
+  'redfin': 'https://www.redfin.com/city/30864/UT/Pleasant-Grove/housing-market',
+  'redfin utah county': 'https://www.redfin.com/county/3012/UT/Utah-County/housing-market',
+  'redfin utah county market report': 'https://www.redfin.com/county/3012/UT/Utah-County/housing-market',
+  'redfin market report': 'https://www.redfin.com/county/3012/UT/Utah-County/housing-market',
+  'redfin data center': 'https://www.redfin.com/news/data-center/',
+  // NAR
+  'nar': 'https://www.nar.realtor/research-and-statistics/housing-statistics/existing-home-sales',
+  'national association of realtors': 'https://www.nar.realtor/research-and-statistics/housing-statistics/existing-home-sales',
+  'nar housing statistics': 'https://www.nar.realtor/research-and-statistics/housing-statistics/existing-home-sales',
+  'nar research': 'https://www.nar.realtor/research-and-statistics',
+  // Utah Association of Realtors
+  'utah association of realtors': 'https://www.utahrealtors.com/news/market-statistics',
+  'utah realtors': 'https://www.utahrealtors.com/news/market-statistics',
+  'utah realtors market statistics': 'https://www.utahrealtors.com/news/market-statistics',
+  'utahrealtors.com': 'https://www.utahrealtors.com/news/market-statistics',
+  // Freddie Mac
+  'freddie mac': 'https://www.freddiemac.com/pmms',
+  'freddie mac pmms': 'https://www.freddiemac.com/pmms',
+  'freddie mac primary mortgage market survey': 'https://www.freddiemac.com/pmms',
+  'primary mortgage market survey': 'https://www.freddiemac.com/pmms',
+  // Census
+  'us census': 'https://www.census.gov/construction/nrc/index.html',
+  'census bureau': 'https://www.census.gov/construction/nrc/index.html',
+  'us census bureau': 'https://www.census.gov/construction/nrc/index.html',
+  'census building permits': 'https://www.census.gov/construction/nrc/index.html',
+  'census new residential construction': 'https://www.census.gov/construction/nrc/index.html',
+  // Zillow (research only — not listing links)
+  'zillow research': 'https://www.zillow.com/research/',
+  'zillow': 'https://www.zillow.com/research/',
+  // Utah specific
+  'utah division of real estate': 'https://realestate.utah.gov',
+  'utah doré': 'https://realestate.utah.gov',
+  'utah real estate': 'https://realestate.utah.gov',
+  'gardner policy institute': 'https://gardner.utah.edu/economics/housing/',
+  'kem c. gardner policy institute': 'https://gardner.utah.edu/economics/housing/',
+  'university of utah': 'https://gardner.utah.edu/economics/housing/',
+  // Mortgage / rates
+  'consumer financial protection bureau': 'https://www.consumerfinance.gov/data-research/mortgage-performance-trends/',
+  'cfpb': 'https://www.consumerfinance.gov/data-research/mortgage-performance-trends/',
+  'mortgage bankers association': 'https://www.mba.org/news-and-research/research-and-economics/single-family-research/weekly-applications-survey',
+  'mba': 'https://www.mba.org/news-and-research/research-and-economics',
+};
+
+function resolveSourceUrl(srcName) {
+  if (!srcName) return '';
+  const key = srcName.toLowerCase().trim();
+  // Exact match first
+  if (SOURCE_URLS[key]) return SOURCE_URLS[key];
+  // Partial match — check if any key is contained in the source name
+  for (const k in SOURCE_URLS) {
+    if (key.includes(k) || k.includes(key)) return SOURCE_URLS[k];
   }
+  return '';
+}
+
+// This key is safe here because the GitHub repo is private and only Beau uses this tool
+const ANTHROPIC_API_KEY = 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;
+const OPENAI_API_KEY = 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; // platform.openai.com
+const PEXELS_API_KEY = Ha6kPeugx7h7LsklcKh5Tu6R4FMOvEgp0OEwCkvXDjCGGY5ppAZJYZki;  // pexels.com/api
+
+async function callClaude(messages, system, maxTokens=2000) {
+  const r = await fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'x-api-key': ANTHROPIC_API_KEY,
+      'anthropic-version': '2023-06-01',
+      'anthropic-dangerous-direct-browser-access': 'true',
+    },
+    body: JSON.stringify({
+      model: 'claude-sonnet-4-20250514',
+      max_tokens: maxTokens,
+      system,
+      messages,
+    }),
+  });
+  if (!r.ok) {
+    const errText = await r.text().catch(() => 'unknown');
+    throw new Error('API ' + r.status + ': ' + errText.slice(0,100));
+  }
+  const d = await r.json();
+  if (d.error) throw new Error(d.error.message || JSON.stringify(d.error));
+  return d.content.map(b => b.text||'').join('');
 }
 
 function parseJSON(raw) {
@@ -721,43 +855,214 @@ function restoreSetupUI() {
 function goStep2() {
   store.saveSession(flow);
   showPage('pageTrends');
-  renderQuestions();
-  fetchTrends();
+
+  const briefCard = document.getElementById('marketBriefCard');
+  const trendSection = document.getElementById('trendSection');
+  const questionsWrap = document.getElementById('questionsWrap');
+  const step2Next = document.getElementById('step2Next');
+
+  if (flow.postType === 'market_monday') {
+    // Show brief, hide everything else until brief is reviewed
+    briefCard.style.display = 'block';
+    if (trendSection) trendSection.style.display = 'none';
+    if (questionsWrap) questionsWrap.style.display = 'none';
+    if (step2Next) step2Next.style.display = 'none';
+    fetchMarketBrief();
+  } else {
+    briefCard.style.display = 'none';
+    if (trendSection) trendSection.style.display = 'block';
+    if (questionsWrap) questionsWrap.style.display = 'block';
+    if (step2Next) step2Next.style.display = 'block';
+    fetchTrends().then(function() { renderQuestions(); });
+  }
+}
+
+function onBriefReviewed() {
+  // Called when Beau checks the "Brief reviewed" checkbox
+  const trendSection = document.getElementById('trendSection');
+  const questionsWrap = document.getElementById('questionsWrap');
+  const step2Next = document.getElementById('step2Next');
+  if (trendSection) trendSection.style.display = 'block';
+  if (questionsWrap) { questionsWrap.style.display = 'block'; questionsWrap.innerHTML = ''; }
+  if (step2Next) step2Next.style.display = 'block';
+  fetchTrends().then(function() { renderQuestions(); });
 }
 
 // ═══════════════════════════════════════════════════════
 // STEP 2: TRENDS + QUESTIONS
 // ═══════════════════════════════════════════════════════
+async function fetchMarketBrief() {
+  const gl = geoLabel();
+  const today = todayDate();
+  const briefContent = document.getElementById('briefContent');
+  const briefLoading = document.getElementById('briefLoading');
+  const briefTitle = document.getElementById('briefTitle');
+  const briefReviewRow = document.getElementById('briefReviewRow');
+  if (briefTitle) briefTitle.textContent = gl + ' — Market Brief';
+
+  const SECTIONS = [
+    { id:'home_values',     label:'Home Values',      prompt:'median home price, price per sq ft estimate, year-over-year price change direction' },
+    { id:'inventory',       label:'Inventory',        prompt:'estimated active listings, months of supply, average days on market' },
+    { id:'new_construction',label:'New Construction', prompt:'notable new build areas or active developments in or near this area' },
+    { id:'seasonal',        label:'Seasonal Trends',  prompt:'what this time of year (spring/summer/fall/winter) typically means for this market' },
+    { id:'market_signal',   label:'Market Signal',    prompt:'one clear statement: is this a buyers market, sellers market, or balanced and why' },
+  ];
+
+  try {
+    const sectionPrompts = SECTIONS.map(function(s) {
+      return s.id + ': ' + s.prompt;
+    }).join('; ');
+
+    const raw = await callClaude([{ role:'user', content:
+      'Today is ' + today + '. Generate a real estate market brief for ' + gl + ', Utah. Use the most recent available data — this week, this month, or last quarter — whichever is most current. Pull from known public data sources where possible: Redfin market reports, NAR statistics, Freddie Mac mortgage data, US Census building permits, and Utah Association of Realtors reports. Each data point must be labeled S (sourced — you can cite a real public source for this) or E (your informed estimate based on regional patterns). Use S confidently when the data type is routinely published by these sources — median prices, days on market, mortgage rates, and seasonal trends are all regularly sourced. Only use E when the data is genuinely city-specific and not typically published at that granularity. Include the source name for every S item. Keep each point to one clear sentence. Return JSON only: {"home_values":[{"text":"...","type":"S","src":"Redfin Utah County Market Report"}],"inventory":[{"text":"...","type":"S or E","src":"source name or empty"}],"new_construction":[{"text":"...","type":"S or E","src":""}],"seasonal":[{"text":"...","type":"S","src":"Utah Association of Realtors"}],"market_signal":[{"text":"...","type":"S or E","src":""}]}. Do not include any URLs — only source names.'
+    }], 'You are a Utah real estate market analyst with deep knowledge of Redfin, NAR, Freddie Mac, Census, and Utah Association of Realtors public data. Label S confidently for data types that are routinely published by major sources — do not default everything to E. Return valid compact JSON only. No markdown. Each array has 1-3 items.', 1000);
+
+    const r = parseJSON(raw);
+    if (!r) throw new Error('JSON parse failed');
+
+    briefContent.innerHTML = '';
+    let briefLines = [];
+    let firstDataPoint = '';
+
+    SECTIONS.forEach(function(sec) {
+      const items = r[sec.id] || [];
+      if (!items.length) return;
+
+      // Section header — white/light bold, not gold
+      const secHead = document.createElement('div');
+      secHead.style.cssText = 'font-size:12px;font-weight:700;color:#C8BFA8;letter-spacing:0.06em;text-transform:uppercase;margin:14px 0 6px;padding-bottom:4px;border-bottom:1px solid rgba(212,168,67,0.2)';
+      secHead.textContent = sec.label;
+      briefContent.appendChild(secHead);
+
+      items.forEach(function(item) {
+        if (!item.text) return;
+        if (!firstDataPoint && sec.id === 'home_values') firstDataPoint = item.text;
+
+        const block = document.createElement('div');
+        block.style.cssText = 'padding:6px 0 8px;border-bottom:1px solid var(--faint)';
+
+        // Data text — green for sourced, gold for estimated, white for normal
+        const val = document.createElement('div');
+        var textColor;
+        if (item.type === 'S') textColor = '#3D9E6A';
+        else if (item.type === 'E') textColor = '#D4A843';
+        else textColor = '#C8BFA8';
+        val.style.cssText = 'font-size:13px;line-height:1.55;color:' + textColor;
+        val.textContent = item.text;
+        block.appendChild(val);
+
+        // Source — italicized below sourced items
+        // URL comes from our hardcoded lookup table only — never from Claude
+        if (item.type === 'S' && item.src) {
+          const srcLine = document.createElement('div');
+          srcLine.style.cssText = 'font-size:11px;font-style:italic;color:#3D9E6A;margin-top:3px;font-family:var(--body)';
+          srcLine.textContent = 'Source: ';
+
+          const verifiedUrl = resolveSourceUrl(item.src);
+          if (verifiedUrl) {
+            const link = document.createElement('a');
+            link.href = verifiedUrl;
+            link.target = '_blank';
+            link.rel = 'noopener';
+            link.style.cssText = 'font-size:11px;font-style:italic;color:#4A92C6;text-decoration:none;font-family:var(--body)';
+            link.textContent = item.src;
+            link.onmouseover = function() { this.style.textDecoration = 'underline'; };
+            link.onmouseout = function() { this.style.textDecoration = 'none'; };
+            srcLine.appendChild(link);
+          } else {
+            // No verified URL for this source — show plain text, no link
+            const plain = document.createElement('span');
+            plain.style.cssText = 'font-size:11px;font-style:italic;color:#3D9E6A;font-family:var(--body)';
+            plain.textContent = item.src;
+            srcLine.appendChild(plain);
+          }
+          block.appendChild(srcLine);
+        }
+
+        briefContent.appendChild(block);
+        briefLines.push(sec.label + ': ' + item.text);
+      });
+    });
+
+    flow._marketBrief = briefLines.join(' | ');
+    flow._briefPreload = firstDataPoint;
+
+    // Show the "reviewed" checkbox to gate next sections
+    if (briefLoading) briefLoading.style.display = 'none';
+    if (briefReviewRow) briefReviewRow.style.display = 'flex';
+
+  } catch(e) {
+    console.warn('fetchMarketBrief error:', e.message);
+    if (briefContent) {
+      briefContent.innerHTML = '';
+      const err = document.createElement('div');
+      err.style.cssText = 'font-size:13px;color:var(--muted);padding:8px 0';
+      err.textContent = 'Market brief unavailable. Click below to continue.';
+      briefContent.appendChild(err);
+    }
+    if (briefLoading) briefLoading.style.display = 'none';
+    if (briefReviewRow) briefReviewRow.style.display = 'flex';
+    flow._marketBrief = '';
+    flow._briefPreload = '';
+  }
+}
+
 async function fetchTrends() {
   const gl = geoLabel();
   const today = todayDate();
   const loadEl = document.getElementById('trendLoading');
   const cardsEl = document.getElementById('trendCards');
-  loadEl.style.display = 'flex';
+  if (loadEl) loadEl.style.display = 'flex';
   try {
     const raw = await callClaude([{ role:'user', content:
-      `Today is ${today}. Search the web for 3 real, current trending topics from the past 7 days relevant to a Utah real estate ${flow.postType} social post for ${gl}. Use actual recent news — local Utah events, real estate market news, community happenings, or non-political pop culture from this week. For each topic include a real source URL where Beau can verify the information. Return JSON only: {"topics":[{"id":"t1","headline":"catchy short headline based on real current news","why":"one sentence why this fits a ${flow.postType} post right now","hook":"how Beau could naturally reference this this week","sourceUrl":"https://actual-source-url.com","sourceName":"Source Name"}]}`
-    }], 'You are a social media strategist for a Utah realtor. Search for real current news. Return valid JSON only.', 900);
+      'Today is ' + today + '. Suggest 3 timely topic hooks for a Utah real estate ' + flow.postType + ' social post for ' + gl + '. These should feel current and relevant to this time of year and market conditions. For each include: a short punchy headline (8 words max), one sentence on why it fits right now, and a one-sentence hook for how Beau could use it. Do NOT invent specific URLs or statistics. Return JSON only: {"topics":[{"id":"t1","headline":"short headline","why":"why it fits right now","hook":"how Beau uses it"}]}'
+    }], 'You are a social media strategist for a Utah realtor. Return valid JSON only.', 600);
     const r = parseJSON(raw);
-    const topics = r?.topics || [];
-    cardsEl.innerHTML = topics.map(t => `
-      <div class="trend-card" data-id="${t.id}" onclick="selectTrend(this,'${t.id}')">
-        <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px">
-          <div style="flex:1">
-            <div style="font-weight:600;font-size:14px;margin-bottom:3px">${t.headline}</div>
-            <div style="font-size:12px;color:var(--muted);margin-bottom:4px">${t.why}</div>
-            <div style="font-size:12px;color:var(--gold);font-style:italic;margin-bottom:5px">${t.hook}</div>
-            ${t.sourceUrl ? `<a href="${t.sourceUrl}" target="_blank" rel="noopener" style="font-size:11px;color:var(--blue);text-decoration:none;font-family:var(--mono)" onclick="event.stopPropagation()">↗ ${t.sourceName||'View source'}</a>` : ''}
-          </div>
-          <div class="trend-dot"></div>
-        </div>
-      </div>`).join('');
+    const topics = r ? (r.topics || []) : [];
+    if (!topics.length) throw new Error('No topics returned');
+    cardsEl.innerHTML = '';
     flow._trends = topics;
+    topics.forEach(function(t) {
+      const card = document.createElement('div');
+      card.className = 'trend-card';
+      card.dataset.id = t.id;
+      card.onclick = function() { selectTrend(this, t.id); };
+
+      const inner = document.createElement('div');
+      inner.style.cssText = 'display:flex;justify-content:space-between;align-items:flex-start;gap:10px';
+
+      const body = document.createElement('div');
+      body.style.flex = '1';
+
+      const hl = document.createElement('div');
+      hl.style.cssText = 'font-weight:600;font-size:14px;margin-bottom:3px';
+      hl.textContent = t.headline;
+
+      const why = document.createElement('div');
+      why.style.cssText = 'font-size:12px;color:var(--muted);margin-bottom:3px';
+      why.textContent = t.why;
+
+      const hook = document.createElement('div');
+      hook.style.cssText = 'font-size:12px;color:var(--gold);font-style:italic';
+      hook.textContent = t.hook;
+
+      body.appendChild(hl);
+      body.appendChild(why);
+      body.appendChild(hook);
+
+      const dot = document.createElement('div');
+      dot.className = 'trend-dot';
+
+      inner.appendChild(body);
+      inner.appendChild(dot);
+      card.appendChild(inner);
+      cardsEl.appendChild(card);
+    });
   } catch(e) {
     console.warn('fetchTrends error:', e.message);
-    cardsEl.innerHTML = '<div style="color:var(--muted);font-size:13px">Could not load trending topics — skip or enter your own below.</div>';
+    cardsEl.innerHTML = '<div style="color:var(--muted);font-size:13px">Could not load topic hooks — describe your own below or skip.</div>';
   }
-  loadEl.style.display = 'none';
+  if (loadEl) loadEl.style.display = 'none';
 }
 
 function selectTrend(el, id) {
@@ -868,10 +1173,10 @@ async function fetchSuggestions(q, gl, onAnswered) {
   for (let attempt = 0; attempt <= maxRetries; attempt++) {
     try {
       const today = todayDate();
-      const prompt = 'Today is ' + today + '. Generate 3 specific first-person answer options for a Utah real estate post for ' + gl + ', for this question: ' + q.text + '. Sound like Beau Gardner — warm, genuine, knowledgeable northern Utah realtor. Each option 1-2 sentences, specific and current. No source URLs needed. JSON only: {"options":["answer 1","answer 2","answer 3"]}';
+      const prompt = 'Today is ' + today + '. Generate 3 short theme options (5-8 words each, like a bullet point topic) for a Utah real estate post for ' + gl + ', for this question: ' + q.text + '. These are quick topic picks for Beau to choose from — not full sentences or captions, just short specific themes like "Inventory tightening in Pleasant Grove" or "Interest rates stabilizing this spring" or "Multiple offers returning on $500K homes". Current and specific to ' + gl + '. JSON only: {"options":["short theme 1","short theme 2","short theme 3"]}';
       const raw = await callClaude(
         [{ role:'user', content: prompt }],
-        'You are a Utah real estate content assistant. Generate realistic first-person answer options. Return valid JSON only with a simple string array.',
+        'You are a Utah real estate content assistant. Generate short specific theme bullets (5-8 words each) not full sentences. Return valid JSON only with a simple string array.',
         600
       );
       const r = parseJSON(raw);
@@ -880,6 +1185,26 @@ async function fetchSuggestions(q, gl, onAnswered) {
       if (!el) return;
 
       el.innerHTML = '';
+      // For Market Monday first question, prepend a brief-sourced suggestion
+      const isFirstQ = (currentQuestionIndex === 1 || el.id === 'sugg_q1');
+      if (flow.postType === 'market_monday' && isFirstQ && flow._briefPreload) {
+        const preBtn = document.createElement('button');
+        preBtn.className = 'sugg-btn';
+        preBtn.dataset.qid = q.id;
+        preBtn.dataset.val = flow._briefPreload;
+        preBtn.onclick = function() {
+          pickSuggBtn(this);
+          if (preBtn.classList.contains('selected') && typeof onAnswered === 'function') onAnswered();
+        };
+        const preLabel = document.createElement('div');
+        preLabel.style.cssText = 'font-size:10px;color:#3D9E6A;font-family:var(--mono);margin-bottom:3px;text-transform:uppercase;letter-spacing:0.06em';
+        preLabel.textContent = '● From market brief';
+        const preText = document.createElement('div');
+        preText.textContent = flow._briefPreload;
+        preBtn.appendChild(preLabel);
+        preBtn.appendChild(preText);
+        el.appendChild(preBtn);
+      }
       opts.forEach(function(o) {
         const text = typeof o === 'string' ? o : (o.text || '');
         if (!text) return;
@@ -985,6 +1310,7 @@ async function runGeneration() {
 
     setStatus('Writing three variations...', 50);
     const todayFull = todayDate();
+    const briefContext = flow._marketBrief ? 'MARKET BRIEF CONTEXT for ' + geoLabel() + ': ' + flow._marketBrief + '. Use this data to inform the post unless the user has selected a different focus.' : '';
     const vc = store.voice().slice(0,6).map(e =>
       `[${e.date}|${e.postType}|${e.city||'Regional'}]: "${e.approvedCaption.slice(0,160)}"${e.voiceNote?` (note: "${e.voiceNote}")`:''}`)
       .join('\n');
@@ -1001,6 +1327,7 @@ Today is ${todayFull}. You are the social media content strategist for Utah Vist
 GEOGRAPHIC FOCUS: ${gl}
 HASHTAG REACH CONTEXT: ${hc}
 MARKET DATA: ${market}
+${briefContext}
 BEAU'S INPUT: ${inp || 'Use market data and community context.'}
 ${blogContent ? 'BLOG CONTENT:\n' + blogContent : ''}
 TRENDING HOOK: ${th}
@@ -1056,6 +1383,167 @@ Return JSON only, no markdown:
 // ═══════════════════════════════════════════════════════
 // STEP 4: REVIEW
 // ═══════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════════
+// IMAGE PANEL
+// ═══════════════════════════════════════════════════════
+
+function switchImgTab(tab, btn) {
+  document.querySelectorAll('.img-tab').forEach(function(t) { t.classList.remove('active'); });
+  btn.classList.add('active');
+  document.getElementById('imgTabSource').style.display = tab === 'source' ? 'block' : 'none';
+  document.getElementById('imgTabGenerate').style.display = tab === 'generate' ? 'block' : 'none';
+  document.getElementById('imgTabUpload').style.display = tab === 'upload' ? 'block' : 'none';
+}
+
+function showImgPreview(url, label) {
+  flow.imageUrl = url;
+  const preview = document.getElementById('imgPreview');
+  const loading = document.getElementById('imgLoadingState');
+  const tag = document.getElementById('imgTypeTag');
+  if (url) {
+    preview.src = url;
+    preview.style.display = 'block';
+    loading.style.display = 'none';
+  } else {
+    preview.style.display = 'none';
+    loading.style.display = 'flex';
+    document.getElementById('imgLoadingText').textContent = 'No image selected';
+  }
+  if (tag && label) tag.textContent = label;
+}
+
+function imgLoadError() {
+  const preview = document.getElementById('imgPreview');
+  const loading = document.getElementById('imgLoadingState');
+  if (preview) preview.style.display = 'none';
+  if (loading) {
+    loading.style.display = 'flex';
+    const txt = document.getElementById('imgLoadingText');
+    if (txt) txt.textContent = 'Could not load image — try another or upload your own';
+  }
+}
+
+// ── Pexels search ─────────────────────────────────────────────────────────
+async function searchPexels(customQuery) {
+  const query = customQuery || document.getElementById('pexelsSearch').value.trim();
+  if (!query) return;
+  const resultsEl = document.getElementById('pexelsResults');
+  if (resultsEl) resultsEl.innerHTML = '<div style="color:var(--muted);font-size:12px;grid-column:1/-1;text-align:center;padding:8px">Searching...</div>';
+  try {
+    const r = await fetch('https://api.pexels.com/v1/search?query=' + encodeURIComponent(query) + '&per_page=9&orientation=square', {
+      headers: { 'Authorization': PEXELS_API_KEY }
+    });
+    if (!r.ok) throw new Error('Pexels ' + r.status);
+    const d = await r.json();
+    const photos = d.photos || [];
+    if (!photos.length) {
+      if (resultsEl) resultsEl.innerHTML = '<div style="color:var(--muted);font-size:12px;grid-column:1/-1;text-align:center">No results — try different keywords</div>';
+      return;
+    }
+    if (resultsEl) {
+      resultsEl.innerHTML = '';
+      photos.forEach(function(p) {
+        const img = document.createElement('img');
+        img.src = p.src.medium;
+        img.style.cssText = 'width:100%;aspect-ratio:1/1;object-fit:cover;border-radius:5px;cursor:pointer;border:2px solid transparent;transition:border-color 0.15s';
+        img.title = p.photographer;
+        img.onclick = function() {
+          document.querySelectorAll('#pexelsResults img').forEach(function(i) { i.style.borderColor = 'transparent'; });
+          img.style.borderColor = 'var(--gold)';
+          showImgPreview(p.src.large, '📸 Pexels');
+        };
+        resultsEl.appendChild(img);
+      });
+    }
+  } catch(e) {
+    console.warn('Pexels error:', e.message);
+    if (resultsEl) resultsEl.innerHTML = '<div style="color:var(--muted);font-size:12px;grid-column:1/-1;text-align:center">Could not load photos — check your Pexels API key in Settings</div>';
+  }
+}
+
+// Auto-search Pexels based on post type and city when review loads
+function autoSearchPexels() {
+  const gl = geoLabel();
+  const postType = flow.postType;
+  const queries = {
+    market_monday: gl + ' Utah neighborhood homes spring',
+    community: gl + ' Utah community park families',
+    weekend_re: gl + ' Utah house for sale',
+    blog_teaser: 'Utah real estate market',
+  };
+  const q = queries[postType] || 'Utah real estate';
+  const searchEl = document.getElementById('pexelsSearch');
+  if (searchEl) searchEl.value = q;
+  searchPexels(q);
+}
+
+// ── DALL-E 3 generation ───────────────────────────────────────────────────
+async function generateImage() {
+  const btn = document.getElementById('generateImgBtn');
+  const status = document.getElementById('imgStatus');
+  const promptEl = document.getElementById('dallePrompt');
+
+  let prompt = promptEl ? promptEl.value.trim() : '';
+  if (!prompt) {
+    // Use the auto-generated brief from the variation
+    const v = flow.variations && flow.variations[flow.selVar];
+    prompt = v ? v.imageBrief.replace(/^(SOURCED:|GENERATED:|CAROUSEL:)/,'').trim() : '';
+    prompt += ' Navy blue #0D1A28 and gold #D4A843 color scheme. Utah Vista Homes real estate branding. Clean professional style. No text overlay.';
+  }
+
+  if (btn) { btn.disabled = true; btn.textContent = 'Generating...'; }
+  if (status) { status.style.display = 'block'; status.textContent = 'Sending to DALL-E 3 — usually takes 10-15 seconds...'; }
+
+  try {
+    const r = await fetch('https://api.openai.com/v1/images/generations', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + OPENAI_API_KEY,
+      },
+      body: JSON.stringify({
+        model: 'dall-e-3',
+        prompt: prompt,
+        n: 1,
+        size: '1024x1024',
+        quality: 'standard',
+      }),
+    });
+    if (!r.ok) {
+      const err = await r.json().catch(() => ({}));
+      throw new Error(err.error ? err.error.message : 'OpenAI ' + r.status);
+    }
+    const d = await r.json();
+    const url = d.data && d.data[0] ? d.data[0].url : '';
+    if (!url) throw new Error('No image returned');
+    showImgPreview(url, '🎨 AI Generated');
+    if (status) { status.textContent = 'Generated! Click another variation to generate a different version.'; }
+  } catch(e) {
+    console.warn('DALL-E error:', e.message);
+    if (status) status.textContent = 'Error: ' + e.message;
+  } finally {
+    if (btn) { btn.disabled = false; btn.textContent = 'Generate Image →'; }
+  }
+}
+
+// ── Upload handler ────────────────────────────────────────────────────────
+function handleUpload(inp) {
+  const f = inp.files && inp.files[0];
+  if (!f) return;
+  const url = URL.createObjectURL(f);
+  showImgPreview(url, '📁 Uploaded');
+}
+
+function checkReplaceUrl(inp) {
+  if (inp.value && inp.value.startsWith('http')) {
+    showImgPreview(inp.value, '🔗 URL');
+  }
+}
+
+function openImageSource() {
+  if (flow.imageUrl) window.open(flow.imageUrl, '_blank');
+}
+
 function renderReview() {
   const pt = POST_TYPES[flow.postType];
   document.getElementById('reviewMeta').textContent = `${pt?.label} · ${geoLabel()}`;
@@ -1064,6 +1552,35 @@ function renderReview() {
   renderVariation(flow.selVar);
   renderTimePills();
   renderAnalyticsPanel();
+
+  // Initialize image panel
+  const v = flow.variations && flow.variations[0];
+  // Set DALL-E prompt from variation brief
+  const dalleEl = document.getElementById('dallePrompt');
+  if (dalleEl && v && v.imageBrief) {
+    const brief = v.imageBrief.replace(/^(SOURCED:|GENERATED:|CAROUSEL:)/,'').trim();
+    dalleEl.value = brief + ' Navy #0D1A28 and gold #D4A843 branding. Professional real estate style.';
+  }
+  // Set Pexels brief hint
+  const briefEl = document.getElementById('imgBriefDisplay');
+  if (briefEl && v) briefEl.textContent = v.imageBrief || '';
+  // Default tab and auto-search based on post type
+  const defaultTab = (flow.postType === 'market_monday' || flow.postType === 'blog_teaser') ? 'generate' : 'source';
+  const tabs = document.querySelectorAll('.img-tab');
+  tabs.forEach(function(t) { t.classList.remove('active'); });
+  if (defaultTab === 'generate') {
+    tabs[1] && tabs[1].classList.add('active');
+    switchImgTab('generate', tabs[1] || tabs[0]);
+  } else {
+    tabs[0] && tabs[0].classList.add('active');
+    switchImgTab('source', tabs[0]);
+    autoSearchPexels();
+  }
+  // Show loading state initially
+  const loading = document.getElementById('imgLoadingState');
+  const preview = document.getElementById('imgPreview');
+  if (loading) loading.style.display = 'flex';
+  if (preview) preview.style.display = 'none';
 
   const noWarn = document.getElementById('noWebhookWarn');
   noWarn.style.display = store.webhook() ? 'none' : 'block';
@@ -1112,12 +1629,21 @@ function renderVariation(idx) {
   document.getElementById('hashtagDisplay').innerHTML = (v.hashtags||[]).map(h =>
     `<span class="chip chip-blue">#${h.replace(/^#/,'')}</span>`).join('');
 
-  // Image
-  const icons = { pexels:'📸', generate:'🎨', carousel:'📱' };
-  const labels = { pexels:'Sourced Photo', generate:'AI Generated', carousel:'Carousel Format' };
-  document.getElementById('imgIcon').textContent = icons[v.imageSource] || '📸';
-  document.getElementById('imgSourceLabel').textContent = labels[v.imageSource] || 'Sourced Photo';
-  document.getElementById('imgBriefDisplay').textContent = (v.imageBrief||'').slice(0,100) + '...';
+  // Image panel — update DALL-E prompt and brief hint for this variation
+  const briefEl = document.getElementById('imgBriefDisplay');
+  if (briefEl) briefEl.textContent = (v.imageBrief||''). slice(0,120);
+  const dalleEl = document.getElementById('dallePrompt');
+  if (dalleEl && v.imageBrief) {
+    const brief = v.imageBrief.replace(/^(SOURCED:|GENERATED:|CAROUSEL:)/,'').trim();
+    dalleEl.value = brief + ' Navy #0D1A28 and gold #D4A843 branding. Professional real estate style.';
+  }
+  // Update type tag
+  const tag = document.getElementById('imgTypeTag');
+  if (tag) {
+    if (v.format === 'carousel') tag.textContent = '📱 Carousel';
+    else if (v.imageBrief && v.imageBrief.startsWith('GENERATED:')) tag.textContent = '🎨 Generate';
+    else tag.textContent = '📸 Source';
+  }
 
   updateWordCount();
 }
