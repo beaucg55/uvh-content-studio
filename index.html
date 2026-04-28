@@ -440,7 +440,7 @@ nav{border-bottom:1px solid var(--gold-border);padding:18px 32px;display:flex;ju
   </div>
 </div>
 
-<script>
+<script>//<![CDATA[
 // ═══════════════════════════════════════════════════════
 // CONSTANTS
 // ═══════════════════════════════════════════════════════
@@ -581,14 +581,15 @@ function init() {
   updateVoiceCount();
   renderAnalytics();
   const sess = store.session();
-  if (sess?.postType) {
+  if (sess?.postType && POST_TYPES[sess.postType]) {
     flow = { ...flow, ...sess };
     const pt = POST_TYPES[sess.postType]?.label || '';
     const gl = geoLabel();
     document.getElementById('restoreMsg').innerHTML =
-      `You were working on a <strong style="color:var(--gold)">${pt}</strong> post for <strong style="color:var(--gold)">${gl}</strong>.`;
+      'You were working on a <strong style="color:var(--gold)">' + pt + '</strong> post for <strong style="color:var(--gold)">' + gl + '</strong>.';
     showPage('pageRestore');
   } else {
+    store.clearSession();
     showPage('pageLanding');
   }
 }
@@ -607,10 +608,18 @@ function freshStart() {
 function startFlow() {
   store.clearSession();
   flow = { postType:'', geo:{scope:'northern_utah',city:''}, trend:null, customTrend:'', answers:{}, variations:[], selVar:0, imageUrl:'', marketData:'' };
+  // Safely reset setup page UI
   document.querySelectorAll('.type-btn').forEach(b => b.classList.remove('selected'));
-  document.getElementById('geoCard').style.display = 'none';
-  document.getElementById('voiceRefCard').style.display = 'none';
-  document.getElementById('step1Next').disabled = true;
+  document.querySelectorAll('.scope-btn').forEach(b => b.classList.remove('selected'));
+  document.querySelectorAll('.city-pill').forEach(b => b.classList.remove('selected'));
+  const geoCard = document.getElementById('geoCard');
+  const voiceRefCard = document.getElementById('voiceRefCard');
+  const cityWrap = document.getElementById('cityWrap');
+  const step1Next = document.getElementById('step1Next');
+  if (geoCard) geoCard.style.display = 'none';
+  if (voiceRefCard) voiceRefCard.style.display = 'none';
+  if (cityWrap) cityWrap.style.display = 'none';
+  if (step1Next) step1Next.disabled = true;
   showPage('pageSetup');
 }
 
@@ -770,24 +779,32 @@ async function renderQuestions() {
 async function fetchSuggestions(q, gl) {
   try {
     const today = todayDate();
-    const raw = await callClaude([{ role:'user', content:
-      `Today is ${today}. Search the web for current real information about ${gl} Utah real estate to answer this question with 3 specific factual first-person options: "${q.text}". Each option must reference real current data or something actually happening in ${gl} right now. Sound like Beau Gardner: warm, genuine, knowledgeable northern Utah realtor. 1-2 sentences each. Include a source URL for each so Beau can verify. JSON only: {"options":[{"text":"first person answer with real current data","sourceUrl":"https://real-source.com","sourceName":"Source Name"}]}`
-    }], 'You are a Utah real estate market researcher. Search for real current data. Return valid JSON only.', 800);
+    const prompt = 'Today is ' + today + '. Search the web for current real information about ' + gl + ' Utah real estate to answer this question with 3 specific factual first-person options: ' + q.text + '. Each option must reference real current data or something actually happening in ' + gl + ' right now. Sound like Beau Gardner: warm, genuine, knowledgeable northern Utah realtor. 1-2 sentences each. Include a source URL for each so Beau can verify. JSON only: {"options":[{"text":"first person answer with real current data","sourceUrl":"https://real-source.com","sourceName":"Source Name"}]}';
+    const raw = await callClaude([{ role:'user', content: prompt }],
+      'You are a Utah real estate market researcher. Search for real current data. Return valid JSON only.', 800);
     const r = parseJSON(raw);
     const opts = r?.options || [];
     const el = document.getElementById('sugg_' + q.id);
     if (!el) return;
-    el.innerHTML = opts.map(function(o) {
+    const html = opts.map(function(o) {
       const text = typeof o === 'string' ? o : (o.text || '');
       const sourceUrl = typeof o === 'object' ? (o.sourceUrl || '') : '';
       const sourceName = typeof o === 'object' ? (o.sourceName || 'View source') : 'View source';
-      const safeText = text.replace(/'/g, "\'").replace(/"/g, '&quot;');
-      return '<button class="sugg-btn" onclick="pickSugg('' + q.id + '',this,'' + safeText + '')">'
-        + '<div>' + text + '</div>'
-        + (sourceUrl ? '<div style="margin-top:5px"><a href="' + sourceUrl + '" target="_blank" rel="noopener" style="font-size:11px;color:var(--blue);text-decoration:none;font-family:var(--mono)" onclick="event.stopPropagation()">&#8599; ' + sourceName + '</a></div>' : '')
-        + '</button>';
+      const safeVal = text.replace(/\\/g,'\\\\').replace(/'/g,"\\'");
+      let btn = '<button class=\'sugg-btn\' onclick=\'pickSugg("' + q.id + '",this,"' + safeVal + '")\'>';
+      btn += '<div>' + text + '</div>';
+      if (sourceUrl) {
+        btn += '<div style=\'margin-top:5px\'><a href=\'';
+        btn += sourceUrl + '\' target=\'_blank\' rel=\'noopener\' ';
+        btn += 'style=\'font-size:11px;color:var(--blue);text-decoration:none;font-family:var(--mono)\' ';
+        btn += 'onclick=\'event.stopPropagation()\'>&#8599; ' + sourceName + '</a></div>';
+      }
+      btn += '</button>';
+      return btn;
     }).join('');
-  } catch {
+    el.innerHTML = html;
+  } catch(e) {
+    console.warn('fetchSuggestions error:', e);
     const el = document.getElementById('sugg_' + q.id);
     if (el) el.innerHTML = '';
   }
@@ -1103,6 +1120,6 @@ async function publish() {
 // START
 // ═══════════════════════════════════════════════════════
 init();
-</script>
+//]]></script>
 </body>
 </html>
