@@ -771,100 +771,145 @@ function selectTrend(el, id) {
   }
 }
 
-async function renderQuestions() {
-  const gl = geoLabel();
-  const wrap = document.getElementById('questionsWrap');
-  const qs = POST_QUESTIONS[flow.postType] || [];
-  wrap.innerHTML = qs.map((q,qi) => `
-    <div class="card fu" style="animation-delay:${qi*0.05}s">
-      <div class="label" style="font-size:13px;text-transform:none;letter-spacing:0;font-family:var(--body);font-weight:600;color:var(--white)">${q.text}</div>
-      ${q.type==='url'
-        ? `<div style="margin-top:10px"><input type="url" id="ans_${q.id}" placeholder="https://utvistahomes.com/blog/..." style="font-family:var(--mono);font-size:12px" oninput="saveAnswer('${q.id}',this.value)"/></div>`
-        : `<div id="sugg_${q.id}" style="margin-top:10px"><div style="display:flex;align-items:center;gap:6px;color:var(--muted);font-size:11px"><span class="spinner" style="width:11px;height:11px"></span>Generating suggestions...</div></div>
-           <textarea style="margin-top:6px" rows="2" id="custom_${q.id}" placeholder="Or write your own..." oninput="saveAnswer('${q.id}',this.value)"></textarea>`
-      }
-    </div>`).join('');
+// Sequential question flow — one question loads at a time
+// currentQuestionIndex tracks which question is active
+let currentQuestionIndex = 0;
 
-  // Fetch suggestions sequentially to avoid rate limiting
-  (async function() {
-    for (const q of qs) {
-      if (q.type === 'url') continue;
-      await fetchSuggestions(q, gl);
-      // Small delay between requests to avoid concurrent rate limiting
-      await new Promise(resolve => setTimeout(resolve, 600));
-    }
-  })();
+function renderQuestions() {
+  const wrap = document.getElementById('questionsWrap');
+  wrap.innerHTML = '';
+  currentQuestionIndex = 0;
+  revealNextQuestion();
 }
 
-async function fetchSuggestions(q, gl) {
+function revealNextQuestion() {
+  const gl = geoLabel();
+  const qs = POST_QUESTIONS[flow.postType] || [];
+  if (currentQuestionIndex >= qs.length) return;
+
+  const q = qs[currentQuestionIndex];
+  const wrap = document.getElementById('questionsWrap');
+
+  const card = document.createElement('div');
+  card.className = 'card fu';
+  card.id = 'qcard_' + q.id;
+
+  const label = document.createElement('div');
+  label.style.cssText = 'font-size:13px;font-family:var(--body);font-weight:600;color:var(--white);margin-bottom:12px';
+  label.textContent = q.text;
+  card.appendChild(label);
+
+  if (q.type === 'url') {
+    const inp = document.createElement('input');
+    inp.type = 'url';
+    inp.id = 'ans_' + q.id;
+    inp.placeholder = 'https://utvistahomes.com/blog/...';
+    inp.style.cssText = 'font-family:var(--mono);font-size:12px;width:100%;background:var(--bg);border:1px solid var(--faint);border-radius:6px;padding:9px 13px;color:var(--white)';
+    inp.oninput = function() {
+      saveAnswer(q.id, this.value);
+      // Reveal next question after URL is entered
+      if (this.value.length > 10 && currentQuestionIndex === qs.indexOf(q)) {
+        currentQuestionIndex++;
+        setTimeout(revealNextQuestion, 400);
+      }
+    };
+    card.appendChild(inp);
+    wrap.appendChild(card);
+    // Also show next question for url type after a moment
+    currentQuestionIndex++;
+    setTimeout(revealNextQuestion, 300);
+  } else {
+    // Show loading state
+    const suggWrap = document.createElement('div');
+    suggWrap.id = 'sugg_' + q.id;
+    suggWrap.innerHTML = '<div style="display:flex;align-items:center;gap:6px;color:var(--muted);font-size:11px"><span class="spinner" style="width:11px;height:11px;border:2px solid var(--faint);border-top:2px solid var(--gold);border-radius:50%;animation:spin 0.7s linear infinite;display:inline-block"></span>Generating suggestions...</div>';
+    card.appendChild(suggWrap);
+
+    const skipRow = document.createElement('div');
+    skipRow.style.cssText = 'margin-top:6px;display:flex;gap:8px;align-items:center';
+
+    const customTa = document.createElement('textarea');
+    customTa.rows = 2;
+    customTa.id = 'custom_' + q.id;
+    customTa.placeholder = 'Or write your own...';
+    customTa.style.cssText = 'width:100%;background:var(--bg);border:1px solid var(--faint);border-radius:6px;padding:10px 12px;color:var(--white);font-size:13px;resize:none;font-family:var(--body)';
+    customTa.oninput = function() {
+      saveAnswer(q.id, this.value);
+    };
+    card.appendChild(customTa);
+
+    const skipBtn = document.createElement('button');
+    skipBtn.className = 'btn btn-ghost btn-sm';
+    skipBtn.textContent = 'Skip →';
+    skipBtn.style.marginTop = '8px';
+    skipBtn.onclick = function() {
+      skipBtn.style.display = 'none';
+      if (currentQuestionIndex === qs.indexOf(q) + 1) return; // already advanced
+      currentQuestionIndex = qs.indexOf(q) + 1;
+      revealNextQuestion();
+    };
+    card.appendChild(skipBtn);
+
+    wrap.appendChild(card);
+
+    // Fetch suggestions then reveal next question on selection
+    fetchSuggestions(q, gl, function onAnswered() {
+      const qIdx = qs.indexOf(q);
+      if (currentQuestionIndex <= qIdx) {
+        currentQuestionIndex = qIdx + 1;
+        setTimeout(revealNextQuestion, 400);
+      }
+    });
+  }
+}
+
+async function fetchSuggestions(q, gl, onAnswered) {
   const maxRetries = 2;
   for (let attempt = 0; attempt <= maxRetries; attempt++) {
     try {
       const today = todayDate();
-      const prompt = 'Today is ' + today + '. Generate 3 specific first-person answer options for a Utah real estate post for ' + gl + ', for this question: ' + q.text + '. Sound like Beau Gardner: warm, genuine, knowledgeable northern Utah realtor. 1-2 sentences each. For sourceUrl: ONLY include a URL if you are certain it exists. Prefer only these trusted domains: freddiemac.com, nar.realtor, redfin.com, utah.gov, utahrealtors.com, census.gov, or major news outlets like deseretnews.com or ksl.com. Never guess at local government or small organization URLs. If unsure, set sourceUrl to empty string. JSON only: {"options":[{"text":"answer text","sourceUrl":"verified url or empty string","sourceName":"site name or empty string"}]}';
-      const raw = await callClaude([{ role:'user', content: prompt }],
-        'You are a Utah real estate content assistant. Only use sourceUrl for URLs you are certain exist on trusted domains. When in doubt leave sourceUrl empty. Return valid JSON only.', 800);
+      const prompt = 'Today is ' + today + '. Generate 3 specific first-person answer options for a Utah real estate post for ' + gl + ', for this question: ' + q.text + '. Sound like Beau Gardner — warm, genuine, knowledgeable northern Utah realtor. Each option 1-2 sentences, specific and current. No source URLs needed. JSON only: {"options":["answer 1","answer 2","answer 3"]}';
+      const raw = await callClaude(
+        [{ role:'user', content: prompt }],
+        'You are a Utah real estate content assistant. Generate realistic first-person answer options. Return valid JSON only with a simple string array.',
+        600
+      );
       const r = parseJSON(raw);
-      const opts = r ? (r.options || []) : [];
+      const opts = Array.isArray(r) ? r : (r ? (r.options || []) : []);
       const el = document.getElementById('sugg_' + q.id);
       if (!el) return;
 
-      // Build buttons using data attributes to avoid escaping issues
       el.innerHTML = '';
-      opts.forEach(function(o, idx) {
+      opts.forEach(function(o) {
         const text = typeof o === 'string' ? o : (o.text || '');
-        const sourceUrl = typeof o === 'object' ? (o.sourceUrl || '') : '';
-        const sourceName = typeof o === 'object' ? (o.sourceName || '') : '';
         if (!text) return;
 
         const btn = document.createElement('button');
         btn.className = 'sugg-btn';
         btn.dataset.qid = q.id;
         btn.dataset.val = text;
-        btn.onclick = function() { pickSuggBtn(this); };
+        btn.onclick = function() {
+          pickSuggBtn(this);
+          // Reveal next question when a suggestion is selected
+          if (btn.classList.contains('selected') && typeof onAnswered === 'function') {
+            onAnswered();
+          }
+        };
 
         const textDiv = document.createElement('div');
         textDiv.textContent = text;
         btn.appendChild(textDiv);
-
-        if (sourceUrl && sourceUrl.length > 5) {
-          const srcDiv = document.createElement('div');
-          srcDiv.style.cssText = 'margin-top:6px;display:flex;align-items:center;gap:6px';
-
-          const label = document.createElement('span');
-          label.style.cssText = 'font-size:10px;color:var(--muted);font-family:var(--mono)';
-          label.textContent = 'source:';
-          srcDiv.appendChild(label);
-
-          const link = document.createElement('a');
-          link.href = sourceUrl;
-          link.target = '_blank';
-          link.rel = 'noopener';
-          link.style.cssText = 'font-size:11px;color:var(--blue);text-decoration:none;font-family:var(--mono)';
-          link.textContent = '↗ ' + (sourceName || sourceUrl.replace(/https?:\/\//, '').split('/')[0]);
-          link.onclick = function(e) { e.stopPropagation(); };
-          srcDiv.appendChild(link);
-
-          const warn = document.createElement('span');
-          warn.title = 'Always verify this link before using the data';
-          warn.style.cssText = 'font-size:10px;color:var(--gold);cursor:help';
-          warn.textContent = '⚠ verify';
-          srcDiv.appendChild(warn);
-
-          btn.appendChild(srcDiv);
-        }
-
         el.appendChild(btn);
       });
 
-      return; // success
+      return;
     } catch(e) {
       console.warn('fetchSuggestions attempt', attempt + 1, 'failed:', e.message);
       if (attempt < maxRetries) {
-        await new Promise(function(resolve) { setTimeout(resolve, 1000 * (attempt + 1)); });
+        await new Promise(function(resolve) { setTimeout(resolve, 1200 * (attempt + 1)); });
       } else {
         const el = document.getElementById('sugg_' + q.id);
-        if (el) el.innerHTML = '<div style="font-size:12px;color:var(--muted);padding:4px 0">Could not load suggestions — use the field below.</div>';
+        if (el) el.innerHTML = '<div style="font-size:12px;color:var(--muted);padding:4px 0">Could not load suggestions — write your own below or skip.</div>';
       }
     }
   }
@@ -883,9 +928,14 @@ function pickSugg(qid, btn, val) {
 function pickSuggBtn(btn) {
   const qid = btn.dataset.qid;
   const val = btn.dataset.val;
+  const wasSelected = btn.classList.contains('selected');
   document.querySelectorAll('#sugg_' + qid + ' .sugg-btn').forEach(function(b) { b.classList.remove('selected'); });
-  btn.classList.toggle('selected');
-  flow.answers[qid] = btn.classList.contains('selected') ? val : '';
+  if (!wasSelected) {
+    btn.classList.add('selected');
+    flow.answers[qid] = val;
+  } else {
+    flow.answers[qid] = '';
+  }
   const custom = document.getElementById('custom_' + qid);
   if (custom) custom.value = '';
 }
