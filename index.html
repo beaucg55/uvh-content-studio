@@ -11,53 +11,55 @@
   --bg:#080F18;--surface:#0D1A28;--elevated:#142233;--hover:#1A2E44;
   --gold:#D4A843;--gold-soft:#B8912C;--gold-dim:rgba(212,168,67,0.1);
   --gold-border:rgba(212,168,67,0.22);--gold-strong:rgba(212,168,67,0.5);
-  --white:#EDE7D2;--off:#C5BAA5;--muted:#78706A;--faint:#2A2820;
+  --white:#EDE7D2;--off:#C5BAA5;--muted:#7A7268;--faint:#252018;
   --green:#3D9E6A;--green-bg:rgba(61,158,106,0.1);
   --red:#C44040;--red-bg:rgba(196,64,64,0.1);
   --blue:#4A92C6;--blue-bg:rgba(74,146,198,0.1);
   --display:'Cormorant Garamond',Georgia,serif;
   --body:'Outfit','DM Sans',sans-serif;
   --mono:'JetBrains Mono','Courier New',monospace;
+  /* Type scale */
+  --text-xs:11px;--text-sm:13px;--text-base:15px;--text-md:17px;--text-lg:20px;--text-xl:24px;
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-html,body{background:var(--bg);color:var(--white);font-family:var(--body);-webkit-font-smoothing:antialiased;min-height:100vh}
+html,body{background:var(--bg);color:var(--white);font-family:var(--body);-webkit-font-smoothing:antialiased;min-height:100vh;font-size:15px;line-height:1.6}
 ::-webkit-scrollbar{width:3px}::-webkit-scrollbar-track{background:var(--surface)}::-webkit-scrollbar-thumb{background:var(--gold-border);border-radius:2px}
-textarea,input,button,select{font-family:var(--body)}
+textarea,input,button,select{font-family:var(--body);font-size:15px}
 textarea:focus,input:focus,select:focus{outline:none}
-@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
 @keyframes spin{to{transform:rotate(360deg)}}
 @keyframes glow{0%,100%{box-shadow:0 0 20px rgba(212,168,67,0.1)}50%{box-shadow:0 0 44px rgba(212,168,67,0.28)}}
 .fu{animation:fadeUp 0.32s ease both}
 
 /* Layout */
 .page{display:none}.page.active{display:block}
-.container{max-width:720px;margin:0 auto;padding:48px 20px}
-.container-wide{max-width:1020px;margin:0 auto;padding:40px 20px}
+.container{max-width:680px;margin:0 auto;padding:44px 24px}
+.container-wide{max-width:1040px;margin:0 auto;padding:40px 24px}
 
 /* Cards */
-.card{background:var(--surface);border:1px solid var(--gold-border);border-radius:10px;padding:20px;margin-bottom:14px}
+.card{background:var(--surface);border:1px solid var(--gold-border);border-radius:12px;padding:22px;margin-bottom:16px}
 .card-glow{animation:glow 3s ease-in-out infinite}
 
 /* Typography */
-.label{font-family:var(--mono);font-size:10px;color:var(--muted);letter-spacing:0.2em;text-transform:uppercase;margin-bottom:6px}
-.display{font-family:var(--display);font-weight:500;line-height:1.15}
-.chip{font-family:var(--mono);font-size:10px;font-weight:500;padding:2px 7px;border-radius:3px;background:rgba(212,168,67,0.12);color:var(--gold);border:1px solid rgba(212,168,67,0.3);letter-spacing:0.08em;text-transform:uppercase}
+.label{font-family:var(--mono);font-size:11px;color:var(--muted);letter-spacing:0.18em;text-transform:uppercase;margin-bottom:8px}
+.display{font-family:var(--display);font-weight:500;line-height:1.12}
+.chip{font-family:var(--mono);font-size:11px;font-weight:500;padding:3px 9px;border-radius:4px;background:rgba(212,168,67,0.12);color:var(--gold);border:1px solid rgba(212,168,67,0.3);letter-spacing:0.07em;text-transform:uppercase}
 .chip-blue{background:var(--blue-bg);color:var(--blue);border-color:rgba(74,146,198,0.3)}
-.chip-muted{background:rgba(120,112,106,0.12);color:var(--muted);border-color:rgba(120,112,106,0.2)}
+.chip-muted{background:rgba(120,112,106,0.1);color:var(--muted);border-color:rgba(120,112,106,0.18)}
 
 /* Buttons */
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:10px 20px;font-size:13px;font-weight:600;border-radius:6px;border:none;cursor:pointer;transition:all 0.18s;letter-spacing:0.01em;font-family:var(--body)}
-.btn:disabled{opacity:0.42;cursor:not-allowed}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;padding:11px 22px;font-size:15px;font-weight:600;border-radius:7px;border:none;cursor:pointer;transition:all 0.18s;letter-spacing:0.01em;font-family:var(--body)}
+.btn:disabled{opacity:0.4;cursor:not-allowed}
 .btn-gold{background:linear-gradient(135deg,var(--gold),var(--gold-soft));color:var(--bg)}
 .btn-outline{background:transparent;color:var(--gold);border:1px solid var(--gold-strong)}
 .btn-ghost{background:transparent;color:var(--off);border:1px solid var(--faint)}
 .btn-full{width:100%}
-.btn-lg{padding:13px 28px;font-size:15px}
-.btn-sm{padding:7px 14px;font-size:12px}
+.btn-lg{padding:14px 32px;font-size:17px}
+.btn-sm{padding:8px 16px;font-size:13px}
 
 /* Form */
-.field{margin-bottom:14px}
-textarea,input[type=text],input[type=url]{width:100%;background:var(--bg);border:1px solid var(--faint);border-radius:6px;padding:11px 13px;color:var(--white);font-size:14px;line-height:1.65;transition:border-color 0.2s;font-family:var(--body)}
+.field{margin-bottom:16px}
+textarea,input[type=text],input[type=url]{width:100%;background:var(--bg);border:1px solid var(--faint);border-radius:7px;padding:12px 15px;color:var(--white);font-size:15px;line-height:1.6;transition:border-color 0.2s;font-family:var(--body)}
 textarea:focus,input[type=text]:focus,input[type=url]:focus{border-color:var(--gold-border)}
 textarea{resize:vertical}
 
@@ -69,109 +71,123 @@ textarea{resize:vertical}
 
 /* Nav */
 nav{border-bottom:1px solid var(--gold-border);padding:18px 32px;display:flex;justify-content:space-between;align-items:center}
-.nav-brand{font-family:var(--display);font-size:20px;letter-spacing:0.03em}
-.nav-sub{font-family:var(--mono);font-size:9px;color:var(--muted);letter-spacing:0.2em;text-transform:uppercase}
+.nav-brand{font-family:var(--display);font-size:26px;letter-spacing:0.02em}
+.nav-sub{font-family:var(--mono);font-size:10px;color:var(--muted);letter-spacing:0.22em;text-transform:uppercase;margin-top:2px}
 
 /* Settings bar */
 #settingsBar{background:var(--elevated);border-bottom:1px solid var(--gold-border);padding:14px 32px;display:none;gap:12px;align-items:center}
 #settingsBar.open{display:flex}
 
 /* Post type grid */
-.type-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.type-btn{background:var(--elevated);border:1px solid var(--faint);border-radius:8px;padding:14px 16px;text-align:left;color:var(--white);cursor:pointer;transition:all 0.18s}
+.type-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.type-btn{background:var(--elevated);border:1px solid var(--faint);border-radius:10px;padding:18px 18px;text-align:left;color:var(--white);cursor:pointer;transition:all 0.18s}
+.type-btn:hover{background:var(--hover);border-color:var(--gold-border)}
 .type-btn.selected{background:var(--gold-dim);border-color:var(--gold)}
-.type-btn .type-emoji{font-size:22px;margin-bottom:6px}
-.type-btn .type-name{font-weight:600;font-size:14px;margin-bottom:2px}
-.type-btn .type-day{font-family:var(--mono);font-size:10px;color:var(--muted)}
+.type-btn .type-emoji{font-size:26px;margin-bottom:8px;display:block}
+.type-btn .type-name{font-weight:600;font-size:16px;margin-bottom:3px;display:block}
+.type-btn .type-day{font-family:var(--mono);font-size:11px;color:var(--muted);display:block}
 
 /* Geo scope */
-.scope-btn{display:flex;justify-content:space-between;align-items:center;width:100%;background:var(--elevated);border:1px solid var(--faint);border-radius:6px;padding:12px 15px;color:var(--white);cursor:pointer;transition:all 0.18s;margin-bottom:7px;text-align:left}
+.scope-btn{display:flex;justify-content:space-between;align-items:center;width:100%;background:var(--elevated);border:1px solid var(--faint);border-radius:8px;padding:14px 16px;color:var(--white);cursor:pointer;transition:all 0.18s;margin-bottom:8px;text-align:left}
+.scope-btn:hover{background:var(--hover);border-color:var(--gold-border)}
 .scope-btn.selected{background:var(--gold-dim);border-color:var(--gold)}
-.scope-dot{width:8px;height:8px;border-radius:50%;background:var(--gold);flex-shrink:0;opacity:0}
+.scope-btn .scope-name{font-weight:600;font-size:15px;display:block;margin-bottom:2px}
+.scope-btn .scope-desc{font-size:12px;color:var(--muted);display:block}
+.scope-dot{width:9px;height:9px;border-radius:50%;background:var(--gold);flex-shrink:0;opacity:0;transition:opacity 0.15s}
 .scope-btn.selected .scope-dot{opacity:1}
 
 /* City pills */
-.city-wrap{display:flex;flex-wrap:wrap;gap:7px;margin-top:10px}
-.city-pill{background:var(--bg);border:1px solid var(--faint);border-radius:20px;padding:7px 14px;color:var(--off);font-size:13px;font-weight:500;cursor:pointer;transition:all 0.15s}
+.city-wrap{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.city-pill{background:var(--bg);border:1px solid var(--faint);border-radius:24px;padding:8px 18px;color:var(--off);font-size:14px;font-weight:500;cursor:pointer;transition:all 0.15s}
+.city-pill:hover{border-color:var(--gold-border);color:var(--white)}
 .city-pill.selected{background:var(--gold-dim);border-color:var(--gold);color:var(--gold)}
 
 /* Suggestion buttons */
-.sugg-btn{display:block;width:100%;text-align:left;background:var(--elevated);border:1px solid var(--faint);border-radius:6px;padding:10px 13px;color:var(--off);font-size:13px;line-height:1.5;margin-bottom:7px;cursor:pointer;transition:all 0.15s}
+.sugg-btn{display:block;width:100%;text-align:left;background:var(--elevated);border:1px solid var(--faint);border-radius:8px;padding:12px 16px;color:var(--off);font-size:15px;line-height:1.55;margin-bottom:8px;cursor:pointer;transition:all 0.15s}
+.sugg-btn:hover{background:var(--hover);border-color:var(--gold-border);color:var(--white)}
 .sugg-btn.selected{background:var(--gold-dim);border-color:var(--gold);color:var(--white)}
 
 /* Trend card */
-.trend-card{background:var(--elevated);border:1px solid var(--faint);border-radius:7px;padding:11px 14px;margin-bottom:8px;cursor:pointer;transition:all 0.15s}
+.trend-card{background:var(--elevated);border:1px solid var(--faint);border-radius:9px;padding:14px 16px;margin-bottom:10px;cursor:pointer;transition:all 0.15s}
+.trend-card:hover{background:var(--hover);border-color:var(--gold-border)}
 .trend-card.selected{background:var(--gold-dim);border-color:var(--gold)}
-.trend-dot{width:16px;height:16px;border-radius:50%;border:2px solid var(--faint);flex-shrink:0;margin-top:2px;transition:all 0.15s}
+.trend-dot{width:18px;height:18px;border-radius:50%;border:2px solid var(--faint);flex-shrink:0;margin-top:2px;transition:all 0.15s}
 .trend-card.selected .trend-dot{background:var(--gold);border-color:var(--gold)}
 
 /* Progress bar */
-.progress-track{height:3px;background:var(--faint);border-radius:2px;margin-bottom:18px;overflow:hidden}
+.progress-track{height:3px;background:var(--faint);border-radius:2px;margin-bottom:20px;overflow:hidden}
 .progress-fill{height:100%;background:linear-gradient(90deg,var(--gold-soft),var(--gold));border-radius:2px;transition:width 0.6s ease}
 
 /* Variation tabs */
-.var-tabs{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:20px}
-.var-tab{background:var(--surface);border:1px solid var(--faint);border-radius:7px;padding:9px 15px;cursor:pointer;transition:all 0.18s;display:flex;flex-direction:column;align-items:center;gap:3px}
+.var-tabs{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:24px}
+.var-tab{background:var(--surface);border:1px solid var(--faint);border-radius:8px;padding:10px 18px;cursor:pointer;transition:all 0.18s;display:flex;flex-direction:column;align-items:center;gap:4px;min-width:80px}
+.var-tab:hover{border-color:var(--gold-border)}
 .var-tab.selected{background:var(--gold-dim);border-color:var(--gold)}
-.var-tab .vt-num{font-family:var(--mono);font-size:11px;font-weight:600;color:var(--muted)}
+.var-tab .vt-num{font-family:var(--mono);font-size:12px;font-weight:600;color:var(--muted);letter-spacing:0.08em}
 .var-tab.selected .vt-num{color:var(--gold)}
-.var-tab .vt-angle{font-size:10px;color:var(--muted);font-family:var(--mono);max-width:80px;text-align:center;line-height:1.3}
+.var-tab .vt-angle{font-size:11px;color:var(--muted);font-family:var(--mono);max-width:90px;text-align:center;line-height:1.3}
 
 /* Platform tabs */
 .plat-tabs{display:flex;border-bottom:1px solid var(--faint);margin-bottom:0}
-.plat-tab{padding:9px 20px;background:transparent;border:none;border-bottom:2px solid transparent;color:var(--muted);font-size:13px;font-weight:600;cursor:pointer;font-family:var(--mono);letter-spacing:0.05em;transition:all 0.15s;margin-bottom:-1px}
+.plat-tab{padding:10px 22px;background:transparent;border:none;border-bottom:2px solid transparent;color:var(--muted);font-size:14px;font-weight:600;cursor:pointer;font-family:var(--mono);letter-spacing:0.05em;transition:all 0.15s;margin-bottom:-1px}
 .plat-tab.active{border-bottom-color:var(--gold);color:var(--gold)}
 
 /* Review layout */
-.review-grid{display:grid;grid-template-columns:1fr 310px;gap:18px;align-items:start}
-@media(max-width:700px){.review-grid{grid-template-columns:1fr}}
+.review-grid{display:grid;grid-template-columns:1fr 340px;gap:20px;align-items:start}
+@media(max-width:780px){.review-grid{grid-template-columns:1fr}}
 
 /* Image panel */
-.img-placeholder{background:var(--bg);border-radius:7px;aspect-ratio:1/1;display:flex;flex-direction:column;align-items:center;justify-content:center;border:1px solid var(--faint);padding:14px;margin-bottom:12px;text-align:center}
-.img-preview{width:100%;aspect-ratio:1/1;object-fit:cover;border-radius:7px;display:block;margin-bottom:10px;border:1px solid var(--faint)}
-.img-tabs{display:flex;gap:0;border-bottom:1px solid var(--faint);margin-bottom:12px}
-.img-tab{padding:8px 14px;background:transparent;border:none;border-bottom:2px solid transparent;color:var(--muted);font-size:12px;font-weight:600;cursor:pointer;font-family:var(--mono);letter-spacing:0.05em;transition:all 0.15s;margin-bottom:-1px}
+.img-placeholder{background:var(--bg);border-radius:8px;aspect-ratio:1/1;display:flex;flex-direction:column;align-items:center;justify-content:center;border:1px solid var(--faint);padding:16px;margin-bottom:12px;text-align:center}
+.img-preview{width:100%;aspect-ratio:1/1;object-fit:cover;border-radius:8px;display:block;margin-bottom:12px;border:1px solid var(--faint)}
+.img-tabs{display:flex;gap:0;border-bottom:1px solid var(--faint);margin-bottom:14px}
+.img-tab{padding:9px 16px;background:transparent;border:none;border-bottom:2px solid transparent;color:var(--muted);font-size:13px;font-weight:600;cursor:pointer;font-family:var(--mono);letter-spacing:0.05em;transition:all 0.15s;margin-bottom:-1px}
 .img-tab.active{border-bottom-color:var(--gold);color:var(--gold)}
-.img-status{font-size:11px;color:var(--muted);text-align:center;padding:8px 0;font-style:italic}
+.img-status{font-size:13px;color:var(--muted);text-align:center;padding:8px 0;font-style:italic}
 
 /* Time pills */
-.time-pill{background:var(--elevated);border:1px solid var(--faint);border-radius:5px;padding:7px 11px;color:var(--muted);font-size:11px;font-family:var(--mono);cursor:pointer;transition:all 0.15s;display:inline-flex;align-items:center;gap:4px}
+.time-pill{background:var(--elevated);border:1px solid var(--faint);border-radius:6px;padding:8px 14px;color:var(--muted);font-size:13px;font-family:var(--mono);cursor:pointer;transition:all 0.15s;display:inline-flex;align-items:center;gap:5px}
+.time-pill:hover{border-color:var(--gold-border);color:var(--off)}
 .time-pill.selected{background:var(--gold-dim);border-color:var(--gold);color:var(--gold)}
 
 /* Landing */
-.landing-hero{text-align:center;padding:72px 24px}
+.landing-hero{text-align:center;padding:80px 24px 64px}
 .landing-grid{display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid var(--gold-border)}
-.landing-cell{padding:18px 16px;border-right:1px solid var(--gold-border);text-align:center}
+.landing-cell{padding:20px 16px;border-right:1px solid var(--gold-border);text-align:center}
 .landing-cell:last-child{border-right:none}
+.landing-cell .cell-emoji{font-size:24px;margin-bottom:6px}
+.landing-cell .cell-name{font-weight:600;font-size:14px;margin-bottom:3px}
+.landing-cell .cell-day{font-family:var(--mono);font-size:11px;color:var(--muted)}
 .analytics-strip{background:var(--surface);border-top:1px solid var(--gold-border);padding:14px 32px;display:flex;gap:28px;align-items:center;flex-wrap:wrap}
 
 /* Done screen */
 .done-screen{min-height:80vh;display:flex;align-items:center;justify-content:center;padding:24px}
-.done-card{max-width:420px;width:100%;text-align:center;padding:44px}
+.done-card{max-width:440px;width:100%;text-align:center;padding:48px}
 
-/* Voice note hint */
-.hint{font-size:11px;color:var(--faint);margin-top:5px}
-.back-btn{display:inline-flex;align-items:center;gap:6px;background:none;border:none;color:var(--muted);font-size:13px;font-weight:500;cursor:pointer;padding:0;margin-bottom:20px;transition:color 0.15s;font-family:var(--body)}
-.brief-row{display:flex;justify-content:space-between;align-items:baseline;padding:7px 0;border-bottom:1px solid var(--faint);gap:12px}
-.brief-row:last-child{border-bottom:none}
-.brief-label{font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;flex-shrink:0;width:130px}
-.brief-val{font-size:13px;line-height:1.5;flex:1;text-align:right}
-.brief-src{font-size:11px;color:#3D9E6A;font-family:var(--mono);text-decoration:none;margin-left:6px}
-.brief-src:hover{text-decoration:underline}
-.color-key{display:flex;gap:16px;margin-top:12px;padding-top:10px;border-top:1px solid var(--faint);flex-wrap:wrap}
-.key-item{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--muted)}
-.key-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+/* Utility */
+.hint{font-size:12px;color:var(--faint);margin-top:6px;line-height:1.5}
+.back-btn{display:inline-flex;align-items:center;gap:6px;background:none;border:none;color:var(--muted);font-size:14px;font-weight:500;cursor:pointer;padding:0;margin-bottom:24px;transition:color 0.15s;font-family:var(--body)}
 .back-btn:hover{color:var(--off)}
 
-/* Word count */
-.word-count{font-family:var(--mono);font-size:10px;padding:2px 7px;border-radius:3px;background:rgba(120,112,106,0.12);color:var(--muted);border:1px solid rgba(120,112,106,0.2);letter-spacing:0.08em;text-transform:uppercase}
+/* Brief */
+.brief-row{display:flex;justify-content:space-between;align-items:baseline;padding:8px 0;border-bottom:1px solid var(--faint);gap:12px}
+.brief-row:last-child{border-bottom:none}
+.brief-label{font-size:13px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.07em;flex-shrink:0;width:130px}
+.brief-val{font-size:15px;line-height:1.5;flex:1;text-align:right}
+.brief-src{font-size:12px;color:#3D9E6A;font-family:var(--mono);text-decoration:none;margin-left:8px}
+.brief-src:hover{text-decoration:underline}
+.color-key{display:flex;gap:18px;margin-top:14px;padding-top:12px;border-top:1px solid var(--faint);flex-wrap:wrap}
+.key-item{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted)}
+.key-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
 
-/* Recent voice ref */
-.voice-ref-item{padding:10px 0;border-bottom:1px solid var(--faint)}
+/* Word count */
+.word-count{font-family:var(--mono);font-size:11px;padding:3px 8px;border-radius:4px;background:rgba(120,112,106,0.1);color:var(--muted);border:1px solid rgba(120,112,106,0.18);letter-spacing:0.07em;text-transform:uppercase}
+
+/* Voice ref */
+.voice-ref-item{padding:12px 0;border-bottom:1px solid var(--faint)}
 .voice-ref-item:last-child{border-bottom:none}
 
-/* Rank reason box */
-.rank-box{padding:14px;border-radius:8px;margin-bottom:13px}
+/* Rank box */
+.rank-box{padding:16px;border-radius:9px;margin-bottom:16px}
 .rank-box.top{background:var(--gold-dim);border:1px solid var(--gold)}
 .rank-box.other{background:var(--surface);border:1px solid var(--faint)}
 </style>
@@ -192,10 +208,10 @@ nav{border-bottom:1px solid var(--gold-border);padding:18px 32px;display:flex;ju
 
 <!-- SETTINGS BAR -->
 <div id="settingsBar">
-  <div style="font-family:var(--mono);font-size:11px;color:var(--muted);min-width:150px;flex-shrink:0">Zapier Webhook URL</div>
-  <input type="url" id="webhookInput" placeholder="https://hooks.zapier.com/hooks/catch/..." style="flex:1;font-family:var(--mono);font-size:12px"/>
+  <div style="font-family:var(--mono);font-size:13px;color:var(--muted);min-width:150px;flex-shrink:0">Zapier Webhook URL</div>
+  <input type="url" id="webhookInput" placeholder="https://hooks.zapier.com/hooks/catch/..." style="flex:1;font-family:var(--mono);font-size:13px"/>
   <button class="btn btn-gold btn-sm" onclick="saveWebhook()">Save</button>
-  <span id="webhookWarning" style="font-size:11px;color:var(--red);flex-shrink:0;display:none">Required to publish</span>
+  <span id="webhookWarning" style="font-size:13px;color:var(--red);flex-shrink:0;display:none">Required to publish</span>
 </div>
 
 <!-- ═══════════════════════════════════════════
@@ -468,7 +484,7 @@ nav{border-bottom:1px solid var(--gold-border);padding:18px 32px;display:flex;ju
             <input type="text" id="schedTime" placeholder="Custom time..." style="font-family:var(--mono)"/>
           </div>
           <button class="btn btn-gold btn-full" id="publishBtn" onclick="publish()">Approve &amp; Schedule →</button>
-          <div style="font-size:11px;color:var(--red);text-align:center;margin-top:7px;display:none" id="noWebhookWarn">⚠ Add webhook URL in Settings first</div>
+          <div style="font-size:13px;color:var(--red);text-align:center;margin-top:7px;display:none" id="noWebhookWarn">⚠ Add webhook URL in Settings first</div>
         </div>
       </div>
     </div>
@@ -611,12 +627,20 @@ function hashCtx() {
 // Claude returns source names — we map them to known stable URLs
 // Never let Claude generate URLs — only use this table
 const SOURCE_URLS = {
-  // Redfin
-  'redfin': 'https://www.redfin.com/city/30864/UT/Pleasant-Grove/housing-market',
-  'redfin utah county': 'https://www.redfin.com/county/3012/UT/Utah-County/housing-market',
-  'redfin utah county market report': 'https://www.redfin.com/county/3012/UT/Utah-County/housing-market',
-  'redfin market report': 'https://www.redfin.com/county/3012/UT/Utah-County/housing-market',
+  // Redfin — verified URLs from live search April 2026
+  'redfin': 'https://www.redfin.com/county/2918/UT/Utah-County/housing-market',
+  'redfin utah county': 'https://www.redfin.com/county/2918/UT/Utah-County/housing-market',
+  'redfin utah county market report': 'https://www.redfin.com/county/2918/UT/Utah-County/housing-market',
+  'redfin market report': 'https://www.redfin.com/county/2918/UT/Utah-County/housing-market',
+  'redfin utah': 'https://www.redfin.com/state/Utah/housing-market',
   'redfin data center': 'https://www.redfin.com/news/data-center/',
+  'redfin salt lake county': 'https://www.redfin.com/county/2911/UT/Salt-Lake-County/housing-market',
+  'redfin salt lake city': 'https://www.redfin.com/city/17150/UT/Salt-Lake-City/housing-market',
+  'redfin lehi': 'https://www.redfin.com/city/11062/UT/Lehi/housing-market',
+  'redfin saratoga springs': 'https://www.redfin.com/city/17369/UT/Saratoga-Springs/housing-market',
+  'redfin eagle mountain': 'https://www.redfin.com/city/5544/UT/Eagle-Mountain/housing-market',
+  'redfin american fork': 'https://www.redfin.com/city/392/UT/American-Fork/housing-market',
+  'redfin pleasant grove': 'https://www.redfin.com/city/15334/UT/Pleasant-Grove/housing-market',
   // NAR
   'nar': 'https://www.nar.realtor/research-and-statistics/housing-statistics/existing-home-sales',
   'national association of realtors': 'https://www.nar.realtor/research-and-statistics/housing-statistics/existing-home-sales',
@@ -638,20 +662,18 @@ const SOURCE_URLS = {
   'us census bureau': 'https://www.census.gov/construction/nrc/index.html',
   'census building permits': 'https://www.census.gov/construction/nrc/index.html',
   'census new residential construction': 'https://www.census.gov/construction/nrc/index.html',
-  // Zillow (research only — not listing links)
+  // Zillow research
   'zillow research': 'https://www.zillow.com/research/',
   'zillow': 'https://www.zillow.com/research/',
   // Utah specific
   'utah division of real estate': 'https://realestate.utah.gov',
-  'utah doré': 'https://realestate.utah.gov',
-  'utah real estate': 'https://realestate.utah.gov',
   'gardner policy institute': 'https://gardner.utah.edu/economics/housing/',
   'kem c. gardner policy institute': 'https://gardner.utah.edu/economics/housing/',
   'university of utah': 'https://gardner.utah.edu/economics/housing/',
   // Mortgage / rates
   'consumer financial protection bureau': 'https://www.consumerfinance.gov/data-research/mortgage-performance-trends/',
   'cfpb': 'https://www.consumerfinance.gov/data-research/mortgage-performance-trends/',
-  'mortgage bankers association': 'https://www.mba.org/news-and-research/research-and-economics/single-family-research/weekly-applications-survey',
+  'mortgage bankers association': 'https://www.mba.org/news-and-research/research-and-economics',
   'mba': 'https://www.mba.org/news-and-research/research-and-economics',
 };
 
@@ -776,8 +798,8 @@ function renderAnalytics() {
   const strip = document.getElementById('analyticsStrip');
   strip.style.display = 'flex';
   document.getElementById('analyticsContent').innerHTML =
-    (a.stats||[]).map(s => `<span style="font-size:13px"><strong style="color:var(--white)">${s.value}</strong> <span style="color:var(--muted)">${s.label}</span></span>`).join('') +
-    (a.suggestion ? `<span style="font-size:12px;color:var(--gold);font-style:italic;margin-left:auto">→ ${a.suggestion}</span>` : '');
+    (a.stats||[]).map(s => `<span style="font-size:14px"><strong style="color:var(--white)">${s.value}</strong> <span style="color:var(--muted)">${s.label}</span></span>`).join('') +
+    (a.suggestion ? `<span style="font-size:13px;color:var(--gold);font-style:italic;margin-left:auto">→ ${a.suggestion}</span>` : '');
 }
 
 // ═══════════════════════════════════════════════════════
@@ -825,8 +847,8 @@ function renderVoiceRef() {
   card.style.display = 'block';
   document.getElementById('voiceRefContent').innerHTML = lib.map((e,i) =>
     `<div class="voice-ref-item ${i===lib.length-1?'':''}">
-      <div style="font-family:var(--mono);font-size:10px;color:var(--muted);margin-bottom:3px">${e.date} · ${e.city||'Regional'}</div>
-      <div style="font-size:13px;color:var(--off);line-height:1.5">${e.approvedCaption.slice(0,130)}…</div>
+      <div style="font-family:var(--mono);font-size:11px;color:var(--muted);margin-bottom:3px">${e.date} · ${e.city||'Regional'}</div>
+      <div style="font-size:14px;color:var(--off);line-height:1.5">${e.approvedCaption.slice(0,130)}…</div>
     </div>`
   ).join('');
 }
@@ -880,7 +902,10 @@ function onBriefReviewed() {
   if (trendSection) trendSection.style.display = 'block';
   if (questionsWrap) { questionsWrap.style.display = 'block'; questionsWrap.innerHTML = ''; }
   if (step2Next) step2Next.style.display = 'block';
-  fetchTrends().then(function() { renderQuestions(); });
+  // Load trends and questions simultaneously — trend selection is optional
+  fetchTrends();
+  // Start questions after a short delay so trends can render first
+  setTimeout(renderQuestions, 300);
 }
 
 // ═══════════════════════════════════════════════════════
@@ -925,7 +950,7 @@ async function fetchMarketBrief() {
 
       // Section header — white/light bold, not gold
       const secHead = document.createElement('div');
-      secHead.style.cssText = 'font-size:12px;font-weight:700;color:#C8BFA8;letter-spacing:0.06em;text-transform:uppercase;margin:14px 0 6px;padding-bottom:4px;border-bottom:1px solid rgba(212,168,67,0.2)';
+      secHead.style.cssText = 'font-size:13px;font-weight:700;color:#C8BFA8;letter-spacing:0.06em;text-transform:uppercase;margin:14px 0 6px;padding-bottom:4px;border-bottom:1px solid rgba(212,168,67,0.2)';
       secHead.textContent = sec.label;
       briefContent.appendChild(secHead);
 
@@ -942,7 +967,7 @@ async function fetchMarketBrief() {
         if (item.type === 'S') textColor = '#3D9E6A';
         else if (item.type === 'E') textColor = '#D4A843';
         else textColor = '#C8BFA8';
-        val.style.cssText = 'font-size:13px;line-height:1.55;color:' + textColor;
+        val.style.cssText = 'font-size:14px;line-height:1.55;color:' + textColor;
         val.textContent = item.text;
         block.appendChild(val);
 
@@ -950,7 +975,7 @@ async function fetchMarketBrief() {
         // URL comes from our hardcoded lookup table only — never from Claude
         if (item.type === 'S' && item.src) {
           const srcLine = document.createElement('div');
-          srcLine.style.cssText = 'font-size:11px;font-style:italic;color:#3D9E6A;margin-top:3px;font-family:var(--body)';
+          srcLine.style.cssText = 'font-size:12px;font-style:italic;color:#3D9E6A;margin-top:3px;font-family:var(--body)';
           srcLine.textContent = 'Source: ';
 
           const verifiedUrl = resolveSourceUrl(item.src);
@@ -959,7 +984,7 @@ async function fetchMarketBrief() {
             link.href = verifiedUrl;
             link.target = '_blank';
             link.rel = 'noopener';
-            link.style.cssText = 'font-size:11px;font-style:italic;color:#4A92C6;text-decoration:none;font-family:var(--body)';
+            link.style.cssText = 'font-size:12px;font-style:italic;color:#4A92C6;text-decoration:none;font-family:var(--body)';
             link.textContent = item.src;
             link.onmouseover = function() { this.style.textDecoration = 'underline'; };
             link.onmouseout = function() { this.style.textDecoration = 'none'; };
@@ -967,7 +992,7 @@ async function fetchMarketBrief() {
           } else {
             // No verified URL for this source — show plain text, no link
             const plain = document.createElement('span');
-            plain.style.cssText = 'font-size:11px;font-style:italic;color:#3D9E6A;font-family:var(--body)';
+            plain.style.cssText = 'font-size:12px;font-style:italic;color:#3D9E6A;font-family:var(--body)';
             plain.textContent = item.src;
             srcLine.appendChild(plain);
           }
@@ -991,7 +1016,7 @@ async function fetchMarketBrief() {
     if (briefContent) {
       briefContent.innerHTML = '';
       const err = document.createElement('div');
-      err.style.cssText = 'font-size:13px;color:var(--muted);padding:8px 0';
+      err.style.cssText = 'font-size:14px;color:var(--muted);padding:8px 0';
       err.textContent = 'Market brief unavailable. Click below to continue.';
       briefContent.appendChild(err);
     }
@@ -1030,15 +1055,15 @@ async function fetchTrends() {
       body.style.flex = '1';
 
       const hl = document.createElement('div');
-      hl.style.cssText = 'font-weight:600;font-size:14px;margin-bottom:3px';
+      hl.style.cssText = 'font-weight:600;font-size:15px;margin-bottom:3px';
       hl.textContent = t.headline;
 
       const why = document.createElement('div');
-      why.style.cssText = 'font-size:12px;color:var(--muted);margin-bottom:3px';
+      why.style.cssText = 'font-size:13px;color:var(--muted);margin-bottom:3px';
       why.textContent = t.why;
 
       const hook = document.createElement('div');
-      hook.style.cssText = 'font-size:12px;color:var(--gold);font-style:italic';
+      hook.style.cssText = 'font-size:13px;color:var(--gold);font-style:italic';
       hook.textContent = t.hook;
 
       body.appendChild(hl);
@@ -1055,7 +1080,7 @@ async function fetchTrends() {
     });
   } catch(e) {
     console.warn('fetchTrends error:', e.message);
-    cardsEl.innerHTML = '<div style="color:var(--muted);font-size:13px">Could not load topic hooks — describe your own below or skip.</div>';
+    cardsEl.innerHTML = '<div style="color:var(--muted);font-size:14px">Could not load topic hooks — describe your own below or skip.</div>';
   }
   if (loadEl) loadEl.style.display = 'none';
 }
@@ -1077,9 +1102,12 @@ let currentQuestionIndex = 0;
 
 function renderQuestions() {
   const wrap = document.getElementById('questionsWrap');
+  if (!wrap) return;
   wrap.innerHTML = '';
+  wrap.style.display = 'block';
   currentQuestionIndex = 0;
-  revealNextQuestion();
+  // Small delay to ensure DOM is ready
+  setTimeout(revealNextQuestion, 100);
 }
 
 function revealNextQuestion() {
@@ -1095,7 +1123,7 @@ function revealNextQuestion() {
   card.id = 'qcard_' + q.id;
 
   const label = document.createElement('div');
-  label.style.cssText = 'font-size:13px;font-family:var(--body);font-weight:600;color:var(--white);margin-bottom:12px';
+  label.style.cssText = 'font-size:14px;font-family:var(--body);font-weight:600;color:var(--white);margin-bottom:12px';
   label.textContent = q.text;
   card.appendChild(label);
 
@@ -1104,7 +1132,7 @@ function revealNextQuestion() {
     inp.type = 'url';
     inp.id = 'ans_' + q.id;
     inp.placeholder = 'https://utvistahomes.com/blog/...';
-    inp.style.cssText = 'font-family:var(--mono);font-size:12px;width:100%;background:var(--bg);border:1px solid var(--faint);border-radius:6px;padding:9px 13px;color:var(--white)';
+    inp.style.cssText = 'font-family:var(--mono);font-size:13px;width:100%;background:var(--bg);border:1px solid var(--faint);border-radius:6px;padding:9px 13px;color:var(--white)';
     inp.oninput = function() {
       saveAnswer(q.id, this.value);
       // Reveal next question after URL is entered
@@ -1122,7 +1150,7 @@ function revealNextQuestion() {
     // Show loading state
     const suggWrap = document.createElement('div');
     suggWrap.id = 'sugg_' + q.id;
-    suggWrap.innerHTML = '<div style="display:flex;align-items:center;gap:6px;color:var(--muted);font-size:11px"><span class="spinner" style="width:11px;height:11px;border:2px solid var(--faint);border-top:2px solid var(--gold);border-radius:50%;animation:spin 0.7s linear infinite;display:inline-block"></span>Generating suggestions...</div>';
+    suggWrap.innerHTML = '<div style="display:flex;align-items:center;gap:6px;color:var(--muted);font-size:12px"><span class="spinner" style="width:11px;height:11px;border:2px solid var(--faint);border-top:2px solid var(--gold);border-radius:50%;animation:spin 0.7s linear infinite;display:inline-block"></span>Generating suggestions...</div>';
     card.appendChild(suggWrap);
 
     const skipRow = document.createElement('div');
@@ -1132,7 +1160,7 @@ function revealNextQuestion() {
     customTa.rows = 2;
     customTa.id = 'custom_' + q.id;
     customTa.placeholder = 'Or write your own...';
-    customTa.style.cssText = 'width:100%;background:var(--bg);border:1px solid var(--faint);border-radius:6px;padding:10px 12px;color:var(--white);font-size:13px;resize:none;font-family:var(--body)';
+    customTa.style.cssText = 'width:100%;background:var(--bg);border:1px solid var(--faint);border-radius:6px;padding:10px 12px;color:var(--white);font-size:14px;resize:none;font-family:var(--body)';
     customTa.oninput = function() {
       saveAnswer(q.id, this.value);
     };
@@ -1192,7 +1220,7 @@ async function fetchSuggestions(q, gl, onAnswered) {
           if (preBtn.classList.contains('selected') && typeof onAnswered === 'function') onAnswered();
         };
         const preLabel = document.createElement('div');
-        preLabel.style.cssText = 'font-size:10px;color:#3D9E6A;font-family:var(--mono);margin-bottom:3px;text-transform:uppercase;letter-spacing:0.06em';
+        preLabel.style.cssText = 'font-size:11px;color:#3D9E6A;font-family:var(--mono);margin-bottom:3px;text-transform:uppercase;letter-spacing:0.06em';
         preLabel.textContent = '● From market brief';
         const preText = document.createElement('div');
         preText.textContent = flow._briefPreload;
@@ -1229,7 +1257,7 @@ async function fetchSuggestions(q, gl, onAnswered) {
         await new Promise(function(resolve) { setTimeout(resolve, 1200 * (attempt + 1)); });
       } else {
         const el = document.getElementById('sugg_' + q.id);
-        if (el) el.innerHTML = '<div style="font-size:12px;color:var(--muted);padding:4px 0">Could not load suggestions — write your own below or skip.</div>';
+        if (el) el.innerHTML = '<div style="font-size:13px;color:var(--muted);padding:4px 0">Could not load suggestions — write your own below or skip.</div>';
       }
     }
   }
@@ -1423,7 +1451,7 @@ async function searchPexels(customQuery) {
   const query = customQuery || document.getElementById('pexelsSearch').value.trim();
   if (!query) return;
   const resultsEl = document.getElementById('pexelsResults');
-  if (resultsEl) resultsEl.innerHTML = '<div style="color:var(--muted);font-size:12px;grid-column:1/-1;text-align:center;padding:8px">Searching...</div>';
+  if (resultsEl) resultsEl.innerHTML = '<div style="color:var(--muted);font-size:13px;grid-column:1/-1;text-align:center;padding:8px">Searching...</div>';
   try {
     const r = await fetch('https://api.pexels.com/v1/search?query=' + encodeURIComponent(query) + '&per_page=9&orientation=square', {
       headers: { 'Authorization': PEXELS_API_KEY }
@@ -1432,7 +1460,7 @@ async function searchPexels(customQuery) {
     const d = await r.json();
     const photos = d.photos || [];
     if (!photos.length) {
-      if (resultsEl) resultsEl.innerHTML = '<div style="color:var(--muted);font-size:12px;grid-column:1/-1;text-align:center">No results — try different keywords</div>';
+      if (resultsEl) resultsEl.innerHTML = '<div style="color:var(--muted);font-size:13px;grid-column:1/-1;text-align:center">No results — try different keywords</div>';
       return;
     }
     if (resultsEl) {
@@ -1452,7 +1480,7 @@ async function searchPexels(customQuery) {
     }
   } catch(e) {
     console.warn('Pexels error:', e.message);
-    if (resultsEl) resultsEl.innerHTML = '<div style="color:var(--muted);font-size:12px;grid-column:1/-1;text-align:center">Could not load photos — check your Pexels API key in Settings</div>';
+    if (resultsEl) resultsEl.innerHTML = '<div style="color:var(--muted);font-size:13px;grid-column:1/-1;text-align:center">Could not load photos — check your Pexels API key in Settings</div>';
   }
 }
 
@@ -1584,7 +1612,7 @@ function renderVarTabs() {
     <button class="var-tab ${i===flow.selVar?'selected':''}" onclick="selectVar(${i})">
       <span class="vt-num">V${i+1}</span>
       <span class="vt-angle">${v.angle}</span>
-      ${i===0?'<span class="chip" style="font-size:9px;padding:1px 5px">Top pick</span>':''}
+      ${i===0?'<span class="chip" style="font-size:11px;padding:1px 5px">Top pick</span>':''}
     </button>`).join('');
 }
 
@@ -1677,9 +1705,9 @@ function renderAnalyticsPanel() {
   if (!a) { panel.style.display='none'; return; }
   panel.style.display = 'block';
   document.getElementById('analyticsPanelContent').innerHTML =
-    (a.stats||[]).map(s => `<div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:6px"><span style="color:var(--muted)">${s.label}</span><span style="font-weight:600">${s.value}</span></div>`).join('') +
-    (a.topPost ? `<div class="divider"></div><div class="label">Top post</div><div style="font-size:12px;color:var(--off);line-height:1.5">${a.topPost}</div>` : '') +
-    (a.suggestion ? `<div style="margin-top:10px;font-size:12px;color:var(--gold);font-style:italic;line-height:1.5">→ ${a.suggestion}</div>` : '');
+    (a.stats||[]).map(s => `<div style="display:flex;justify-content:space-between;font-size:14px;margin-bottom:6px"><span style="color:var(--muted)">${s.label}</span><span style="font-weight:600">${s.value}</span></div>`).join('') +
+    (a.topPost ? `<div class="divider"></div><div class="label">Top post</div><div style="font-size:13px;color:var(--off);line-height:1.5">${a.topPost}</div>` : '') +
+    (a.suggestion ? `<div style="margin-top:10px;font-size:13px;color:var(--gold);font-style:italic;line-height:1.5">→ ${a.suggestion}</div>` : '');
 }
 
 function openImageSource() {
