@@ -691,7 +691,7 @@ function resolveSourceUrl(srcName) {
 
 // All API calls route through Cloudflare Worker — no keys in this file
 const WORKER_URL = 'https://uvh-proxy.beaucg55.workers.dev/';
-const PEXELS_API_KEY = Ha6kPeugx7h7LsklcKh5Tu6R4FMOvEgp0OEwCkvXDjCGGY5ppAZJYZki; // pexels.com/api — add yours here
+const PEXELS_API_KEY = 'Ha6kPeugx7h7LsklcKh5Tu6R4FMOvEgp0OEwCkvXDjCGGY5ppAZJYZki'; // pexels.com/api — add yours here
 
 async function callClaude(messages, system, maxTokens=2000) {
   const r = await fetch(WORKER_URL, {
