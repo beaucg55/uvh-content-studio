@@ -3,6 +3,9 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
+<meta http-equiv="Pragma" content="no-cache"/>
+<meta http-equiv="Expires" content="0"/>
 <title>Utah Vista Homes — Content Studio</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Outfit:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
@@ -22,7 +25,7 @@
   --text-xs:11px;--text-sm:13px;--text-base:15px;--text-md:17px;--text-lg:20px;--text-xl:24px;
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-html,body{background:var(--bg);color:var(--white);font-family:var(--body);-webkit-font-smoothing:antialiased;min-height:100vh;font-size:15px;line-height:1.6}
+html,body{background:var(--bg);color:var(--white);font-family:var(--body);-webkit-font-smoothing:antialiased;min-height:100vh;font-size:17px;line-height:1.65}
 ::-webkit-scrollbar{width:3px}::-webkit-scrollbar-track{background:var(--surface)}::-webkit-scrollbar-thumb{background:var(--gold-border);border-radius:2px}
 textarea,input,button,select{font-family:var(--body);font-size:15px}
 textarea:focus,input:focus,select:focus{outline:none}
@@ -41,25 +44,25 @@ textarea:focus,input:focus,select:focus{outline:none}
 .card-glow{animation:glow 3s ease-in-out infinite}
 
 /* Typography */
-.label{font-family:var(--mono);font-size:11px;color:var(--muted);letter-spacing:0.18em;text-transform:uppercase;margin-bottom:8px}
+.label{font-family:var(--mono);font-size:12px;color:var(--muted);letter-spacing:0.18em;text-transform:uppercase;margin-bottom:8px}
 .display{font-family:var(--display);font-weight:500;line-height:1.12}
-.chip{font-family:var(--mono);font-size:11px;font-weight:500;padding:3px 9px;border-radius:4px;background:rgba(212,168,67,0.12);color:var(--gold);border:1px solid rgba(212,168,67,0.3);letter-spacing:0.07em;text-transform:uppercase}
+.chip{font-family:var(--mono);font-size:12px;font-weight:500;padding:3px 9px;border-radius:4px;background:rgba(212,168,67,0.12);color:var(--gold);border:1px solid rgba(212,168,67,0.3);letter-spacing:0.07em;text-transform:uppercase}
 .chip-blue{background:var(--blue-bg);color:var(--blue);border-color:rgba(74,146,198,0.3)}
 .chip-muted{background:rgba(120,112,106,0.1);color:var(--muted);border-color:rgba(120,112,106,0.18)}
 
 /* Buttons */
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;padding:11px 22px;font-size:15px;font-weight:600;border-radius:7px;border:none;cursor:pointer;transition:all 0.18s;letter-spacing:0.01em;font-family:var(--body)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;padding:12px 24px;font-size:16px;font-weight:600;border-radius:7px;border:none;cursor:pointer;transition:all 0.18s;letter-spacing:0.01em;font-family:var(--body)}
 .btn:disabled{opacity:0.4;cursor:not-allowed}
 .btn-gold{background:linear-gradient(135deg,var(--gold),var(--gold-soft));color:var(--bg)}
 .btn-outline{background:transparent;color:var(--gold);border:1px solid var(--gold-strong)}
 .btn-ghost{background:transparent;color:var(--off);border:1px solid var(--faint)}
 .btn-full{width:100%}
-.btn-lg{padding:14px 32px;font-size:17px}
-.btn-sm{padding:8px 16px;font-size:13px}
+.btn-lg{padding:15px 36px;font-size:18px}
+.btn-sm{padding:9px 18px;font-size:14px}
 
 /* Form */
 .field{margin-bottom:16px}
-textarea,input[type=text],input[type=url]{width:100%;background:var(--bg);border:1px solid var(--faint);border-radius:7px;padding:12px 15px;color:var(--white);font-size:15px;line-height:1.6;transition:border-color 0.2s;font-family:var(--body)}
+textarea,input[type=text],input[type=url]{width:100%;background:var(--bg);border:1px solid var(--faint);border-radius:7px;padding:13px 16px;color:var(--white);font-size:16px;line-height:1.6;transition:border-color 0.2s;font-family:var(--body)}
 textarea:focus,input[type=text]:focus,input[type=url]:focus{border-color:var(--gold-border)}
 textarea{resize:vertical}
 
@@ -71,7 +74,7 @@ textarea{resize:vertical}
 
 /* Nav */
 nav{border-bottom:1px solid var(--gold-border);padding:18px 32px;display:flex;justify-content:space-between;align-items:center}
-.nav-brand{font-family:var(--display);font-size:26px;letter-spacing:0.02em}
+.nav-brand{font-family:var(--display);font-size:28px;letter-spacing:0.02em}
 .nav-sub{font-family:var(--mono);font-size:10px;color:var(--muted);letter-spacing:0.22em;text-transform:uppercase;margin-top:2px}
 
 /* Settings bar */
@@ -84,7 +87,7 @@ nav{border-bottom:1px solid var(--gold-border);padding:18px 32px;display:flex;ju
 .type-btn:hover{background:var(--hover);border-color:var(--gold-border)}
 .type-btn.selected{background:var(--gold-dim);border-color:var(--gold)}
 .type-btn .type-emoji{font-size:26px;margin-bottom:8px;display:block}
-.type-btn .type-name{font-weight:600;font-size:16px;margin-bottom:3px;display:block}
+.type-btn .type-name{font-weight:600;font-size:17px;margin-bottom:3px;display:block}
 .type-btn .type-day{font-family:var(--mono);font-size:11px;color:var(--muted);display:block}
 
 /* Geo scope */
@@ -98,17 +101,17 @@ nav{border-bottom:1px solid var(--gold-border);padding:18px 32px;display:flex;ju
 
 /* City pills */
 .city-wrap{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
-.city-pill{background:var(--bg);border:1px solid var(--faint);border-radius:24px;padding:8px 18px;color:var(--off);font-size:14px;font-weight:500;cursor:pointer;transition:all 0.15s}
+.city-pill{background:var(--bg);border:1px solid var(--faint);border-radius:24px;padding:9px 20px;color:var(--off);font-size:15px;font-weight:500;cursor:pointer;transition:all 0.15s}
 .city-pill:hover{border-color:var(--gold-border);color:var(--white)}
 .city-pill.selected{background:var(--gold-dim);border-color:var(--gold);color:var(--gold)}
 
 /* Suggestion buttons */
-.sugg-btn{display:block;width:100%;text-align:left;background:var(--elevated);border:1px solid var(--faint);border-radius:8px;padding:12px 16px;color:var(--off);font-size:15px;line-height:1.55;margin-bottom:8px;cursor:pointer;transition:all 0.15s}
+.sugg-btn{display:block;width:100%;text-align:left;background:var(--elevated);border:1px solid var(--faint);border-radius:8px;padding:14px 18px;color:var(--off);font-size:16px;line-height:1.55;margin-bottom:8px;cursor:pointer;transition:all 0.15s}
 .sugg-btn:hover{background:var(--hover);border-color:var(--gold-border);color:var(--white)}
 .sugg-btn.selected{background:var(--gold-dim);border-color:var(--gold);color:var(--white)}
 
 /* Trend card */
-.trend-card{background:var(--elevated);border:1px solid var(--faint);border-radius:9px;padding:14px 16px;margin-bottom:10px;cursor:pointer;transition:all 0.15s}
+.trend-card{background:var(--elevated);border:1px solid var(--faint);border-radius:9px;padding:16px 18px;margin-bottom:10px;cursor:pointer;transition:all 0.15s}
 .trend-card:hover{background:var(--hover);border-color:var(--gold-border)}
 .trend-card.selected{background:var(--gold-dim);border-color:var(--gold)}
 .trend-dot{width:18px;height:18px;border-radius:50%;border:2px solid var(--faint);flex-shrink:0;margin-top:2px;transition:all 0.15s}
@@ -129,7 +132,7 @@ nav{border-bottom:1px solid var(--gold-border);padding:18px 32px;display:flex;ju
 
 /* Platform tabs */
 .plat-tabs{display:flex;border-bottom:1px solid var(--faint);margin-bottom:0}
-.plat-tab{padding:10px 22px;background:transparent;border:none;border-bottom:2px solid transparent;color:var(--muted);font-size:14px;font-weight:600;cursor:pointer;font-family:var(--mono);letter-spacing:0.05em;transition:all 0.15s;margin-bottom:-1px}
+.plat-tab{padding:11px 24px;background:transparent;border:none;border-bottom:2px solid transparent;color:var(--muted);font-size:15px;font-weight:600;cursor:pointer;font-family:var(--mono);letter-spacing:0.05em;transition:all 0.15s;margin-bottom:-1px}
 .plat-tab.active{border-bottom-color:var(--gold);color:var(--gold)}
 
 /* Review layout */
@@ -172,7 +175,7 @@ nav{border-bottom:1px solid var(--gold-border);padding:18px 32px;display:flex;ju
 .brief-row{display:flex;justify-content:space-between;align-items:baseline;padding:8px 0;border-bottom:1px solid var(--faint);gap:12px}
 .brief-row:last-child{border-bottom:none}
 .brief-label{font-size:13px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.07em;flex-shrink:0;width:130px}
-.brief-val{font-size:15px;line-height:1.5;flex:1;text-align:right}
+.brief-val{font-size:16px;line-height:1.5;flex:1;text-align:right}
 .brief-src{font-size:12px;color:#3D9E6A;font-family:var(--mono);text-decoration:none;margin-left:8px}
 .brief-src:hover{text-decoration:underline}
 .color-key{display:flex;gap:18px;margin-top:14px;padding-top:12px;border-top:1px solid var(--faint);flex-wrap:wrap}
@@ -418,56 +421,71 @@ nav{border-bottom:1px solid var(--gold-border);padding:18px 32px;display:flex;ju
 
       <!-- Right -->
       <div>
-        <!-- Image -->
+        <!-- Image Panel -->
         <div class="card">
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
-            <div class="label" style="margin:0">Image</div>
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+            <div class="label" style="margin:0">Images</div>
             <span id="imgTypeTag" class="chip chip-muted">—</span>
           </div>
 
-          <!-- Preview area -->
-          <div id="imgPreviewWrap" style="margin-bottom:10px">
-            <div id="imgLoadingState" style="width:100%;aspect-ratio:1/1;background:var(--bg);border-radius:7px;border:1px solid var(--faint);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px">
-              <span class="spinner"></span>
-              <span style="font-size:12px;color:var(--muted)" id="imgLoadingText">Loading image...</span>
-            </div>
-            <img id="imgPreview" class="img-preview" src="" alt="" style="display:none" onerror="imgLoadError()"/>
+          <!-- Selected images strip -->
+          <div id="selectedImagesStrip" style="display:none;margin-bottom:12px">
+            <div class="label" style="margin-bottom:6px">Selected <span id="selectedCount">0</span> image(s)</div>
+            <div id="selectedThumbs" style="display:flex;gap:6px;flex-wrap:wrap"></div>
           </div>
 
           <!-- Action tabs -->
           <div class="img-tabs">
-            <button class="img-tab active" onclick="switchImgTab('source',this)">📸 Source</button>
-            <button class="img-tab" onclick="switchImgTab('generate',this)">🎨 Generate</button>
-            <button class="img-tab" onclick="switchImgTab('upload',this)">📁 Upload</button>
+            <button class="img-tab active" id="tabBtnSource" onclick="switchImgTab('source',this)">📸 Source</button>
+            <button class="img-tab" id="tabBtnGenerate" onclick="switchImgTab('generate',this)">🎨 Generate</button>
+            <button class="img-tab" id="tabBtnUpload" onclick="switchImgTab('upload',this)">📁 Upload</button>
+            <button class="img-tab" id="tabBtnListing" onclick="switchImgTab('listing',this)" style="display:none">🏠 Listing</button>
           </div>
 
-          <!-- Source tab -->
+          <!-- Source tab — Pexels multi-select -->
           <div id="imgTabSource">
             <div style="font-size:12px;color:var(--muted);margin-bottom:8px" id="imgBriefDisplay"></div>
-            <input type="text" id="pexelsSearch" placeholder="Search Pexels (e.g. utah mountains spring)..." style="margin-bottom:8px"/>
-            <button class="btn btn-outline btn-sm btn-full" onclick="searchPexels()">Search Photos →</button>
-            <div id="pexelsResults" style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:10px"></div>
+            <input type="text" id="pexelsSearch" placeholder="Search Pexels (e.g. utah mountains spring)..."/>
+            <button class="btn btn-outline btn-sm btn-full" style="margin:8px 0" onclick="searchPexels()">Search Photos →</button>
+            <div style="font-size:11px;color:var(--muted);margin-bottom:6px">Click images to select. Click again to deselect. Select multiple for carousel.</div>
+            <div id="pexelsResults" style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px"></div>
           </div>
 
-          <!-- Generate tab -->
+          <!-- Generate tab — DALL-E carousel -->
           <div id="imgTabGenerate" style="display:none">
-            <div style="font-size:12px;color:var(--muted);margin-bottom:8px">Generate a branded graphic using DALL-E 3.</div>
-            <textarea id="dallePrompt" rows="3" placeholder="Describe the image you want — or click Generate to use the auto-suggested prompt..."></textarea>
-            <button class="btn btn-gold btn-full" style="margin-top:8px" onclick="generateImage()" id="generateImgBtn">Generate Image →</button>
+            <div style="font-size:12px;color:var(--muted);margin-bottom:8px">Generate branded slide graphics with DALL-E 3. One prompt per slide.</div>
+            <div id="dalleSlides"></div>
+            <button class="btn btn-ghost btn-sm" style="margin-bottom:10px" onclick="addDalleSlide()">+ Add Slide</button>
+            <button class="btn btn-gold btn-full" onclick="generateAllSlides()" id="generateImgBtn">Generate All Slides →</button>
             <div id="imgStatus" class="img-status" style="display:none"></div>
           </div>
 
-          <!-- Upload tab -->
+          <!-- Upload tab — multi-file -->
           <div id="imgTabUpload" style="display:none">
-            <div style="font-size:12px;color:var(--muted);margin-bottom:10px">Upload a photo from your device — great for Beau photos and local shots.</div>
-            <label style="display:flex;align-items:center;justify-content:center;gap:8px;padding:14px;background:var(--elevated);border:2px dashed var(--faint);border-radius:8px;cursor:pointer;font-size:13px;color:var(--off);text-align:center">
-              📁 Click to upload or drag photo here
-              <input type="file" accept="image/*" style="display:none" onchange="handleUpload(this)"/>
+            <div style="font-size:12px;color:var(--muted);margin-bottom:10px">Upload one or multiple photos. Select all files at once for a carousel.</div>
+            <label style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;padding:20px;background:var(--elevated);border:2px dashed var(--faint);border-radius:8px;cursor:pointer;font-size:13px;color:var(--off);text-align:center">
+              📁 Click to upload photos (select multiple)
+              <span style="font-size:11px;color:var(--muted)">Hold Cmd/Ctrl to select multiple files</span>
+              <input type="file" accept="image/*" multiple style="display:none" onchange="handleUpload(this)"/>
             </label>
             <div style="margin-top:10px">
               <input type="url" id="replaceUrl" placeholder="Or paste an image URL directly..." oninput="checkReplaceUrl(this)"/>
             </div>
           </div>
+
+          <!-- Listing tab — URL extractor -->
+          <div id="imgTabListing" style="display:none">
+            <div style="font-size:12px;color:var(--muted);margin-bottom:10px">Paste one listing URL to extract the first 3-5 photos, or multiple URLs separated by commas to get the lead photo from each.</div>
+            <textarea id="listingUrls" rows="3" placeholder="https://utvistahomes.com/listing/123, https://utvistahomes.com/listing/456..."></textarea>
+            <button class="btn btn-gold btn-full" style="margin-top:8px" onclick="extractListingPhotos()" id="extractBtn">Extract Photos →</button>
+            <div id="extractStatus" style="font-size:12px;color:var(--muted);margin-top:6px;display:none"></div>
+          </div>
+        </div>
+
+        <!-- Lightbox -->
+        <div id="lightbox" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.92);z-index:999;align-items:center;justify-content:center;flex-direction:column;gap:12px" onclick="closeLightbox()">
+          <img id="lightboxImg" style="max-width:90vw;max-height:80vh;object-fit:contain;border-radius:8px"/>
+          <div style="color:var(--muted);font-size:13px">Click anywhere to close</div>
         </div>
 
         <!-- Analytics -->
@@ -478,11 +496,18 @@ nav{border-bottom:1px solid var(--gold-border);padding:18px 32px;display:flex;ju
 
         <!-- Schedule -->
         <div class="card">
-          <div class="label">Schedule Time</div>
-          <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px" id="timePills"></div>
-          <div class="field">
-            <input type="text" id="schedTime" placeholder="Custom time..." style="font-family:var(--mono)"/>
+          <div class="label">Schedule</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px">
+            <div>
+              <div style="font-size:11px;color:var(--muted);font-family:var(--mono);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:5px">Date</div>
+              <input type="date" id="schedDate" style="font-family:var(--mono);font-size:14px;background:var(--bg);border:1px solid var(--faint);border-radius:6px;padding:9px 12px;color:var(--white);width:100%"/>
+            </div>
+            <div>
+              <div style="font-size:11px;color:var(--muted);font-family:var(--mono);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:5px">Time</div>
+              <input type="time" id="schedTimeInput" style="font-family:var(--mono);font-size:14px;background:var(--bg);border:1px solid var(--faint);border-radius:6px;padding:9px 12px;color:var(--white);width:100%"/>
+            </div>
           </div>
+          <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px" id="timePills"></div>
           <button class="btn btn-gold btn-full" id="publishBtn" onclick="publish()">Approve &amp; Schedule →</button>
           <div style="font-size:13px;color:var(--red);text-align:center;margin-top:7px;display:none" id="noWebhookWarn">⚠ Add webhook URL in Settings first</div>
         </div>
@@ -499,8 +524,13 @@ nav{border-bottom:1px solid var(--gold-border);padding:18px 32px;display:flex;ju
     <div class="card card-glow done-card fu">
       <div style="font-size:52px;margin-bottom:14px">✓</div>
       <h2 class="display" style="font-size:34px;margin-bottom:8px">Post approved</h2>
-      <p style="color:var(--muted);font-size:14px;margin-bottom:28px">Scheduled for <strong id="doneTime" style="color:var(--gold)"></strong> · Zapier will handle Facebook and Instagram.</p>
-      <button class="btn btn-gold btn-lg" onclick="startFlow()">Create Another →</button>
+      <p style="color:var(--muted);font-size:14px;margin-bottom:8px">Scheduled for <strong id="doneTime" style="color:var(--gold)"></strong></p>
+      <p style="color:var(--muted);font-size:13px;margin-bottom:24px">Zapier is creating a draft in Meta Business Suite. Review and publish it there before it goes live.</p>
+      <a href="https://business.facebook.com/latest/home" target="_blank" rel="noopener"
+        style="display:flex;align-items:center;justify-content:center;gap:8px;padding:12px 24px;background:var(--elevated);border:1px solid var(--gold-border);border-radius:8px;color:var(--gold);text-decoration:none;font-weight:600;font-size:15px;margin-bottom:16px">
+        Review in Meta Business Suite →
+      </a>
+      <button class="btn btn-outline btn-full" style="margin-bottom:10px" onclick="startFlow()">Create Another Post</button>
     </div>
   </div>
 </div>
@@ -895,17 +925,21 @@ function goStep2() {
 }
 
 function onBriefReviewed() {
-  // Called when Beau checks the "Brief reviewed" checkbox
-  const trendSection = document.getElementById('trendSection');
-  const questionsWrap = document.getElementById('questionsWrap');
-  const step2Next = document.getElementById('step2Next');
-  if (trendSection) trendSection.style.display = 'block';
-  if (questionsWrap) { questionsWrap.style.display = 'block'; questionsWrap.innerHTML = ''; }
-  if (step2Next) step2Next.style.display = 'block';
-  // Load trends and questions simultaneously — trend selection is optional
-  fetchTrends();
-  // Start questions after a short delay so trends can render first
-  setTimeout(renderQuestions, 300);
+  var trendSection = document.getElementById('trendSection');
+  var questionsWrap = document.getElementById('questionsWrap');
+  var step2Next = document.getElementById('step2Next');
+
+  // Force all sections visible
+  if (trendSection) { trendSection.style.display = 'block'; trendSection.style.visibility = 'visible'; trendSection.removeAttribute('hidden'); }
+  if (questionsWrap) { questionsWrap.style.display = 'block'; questionsWrap.style.visibility = 'visible'; questionsWrap.removeAttribute('hidden'); questionsWrap.innerHTML = ''; }
+  if (step2Next) { step2Next.style.display = 'block'; step2Next.style.visibility = 'visible'; }
+
+  // Fetch trends first, then start questions once DOM is settled
+  fetchTrends().then(function() {
+    setTimeout(function() {
+      renderQuestions();
+    }, 200);
+  });
 }
 
 // ═══════════════════════════════════════════════════════
@@ -1098,7 +1132,7 @@ function selectTrend(el, id) {
 
 // Sequential question flow — one question loads at a time
 // currentQuestionIndex tracks which question is active
-let currentQuestionIndex = 0;
+var currentQuestionIndex = 0;
 
 function renderQuestions() {
   const wrap = document.getElementById('questionsWrap');
@@ -1410,40 +1444,369 @@ Return JSON only, no markdown:
 // IMAGE PANEL
 // ═══════════════════════════════════════════════════════
 
+// Carousel slide counts by post type
+var CAROUSEL_COUNTS = { market_monday:3, community:4, weekend_re:5, blog_teaser:3 };
+
+// Selected images array — each item is { url, thumb, source }
+var selectedImages = [];
+
 function switchImgTab(tab, btn) {
   document.querySelectorAll('.img-tab').forEach(function(t) { t.classList.remove('active'); });
   btn.classList.add('active');
   document.getElementById('imgTabSource').style.display = tab === 'source' ? 'block' : 'none';
   document.getElementById('imgTabGenerate').style.display = tab === 'generate' ? 'block' : 'none';
   document.getElementById('imgTabUpload').style.display = tab === 'upload' ? 'block' : 'none';
-}
-
-function showImgPreview(url, label) {
-  flow.imageUrl = url;
-  const preview = document.getElementById('imgPreview');
-  const loading = document.getElementById('imgLoadingState');
-  const tag = document.getElementById('imgTypeTag');
-  if (url) {
-    preview.src = url;
-    preview.style.display = 'block';
-    loading.style.display = 'none';
-  } else {
-    preview.style.display = 'none';
-    loading.style.display = 'flex';
-    document.getElementById('imgLoadingText').textContent = 'No image selected';
-  }
-  if (tag && label) tag.textContent = label;
+  document.getElementById('imgTabListing').style.display = tab === 'listing' ? 'block' : 'none';
 }
 
 function imgLoadError() {
-  const preview = document.getElementById('imgPreview');
-  const loading = document.getElementById('imgLoadingState');
-  if (preview) preview.style.display = 'none';
-  if (loading) {
-    loading.style.display = 'flex';
-    const txt = document.getElementById('imgLoadingText');
-    if (txt) txt.textContent = 'Could not load image — try another or upload your own';
+  console.warn('Image failed to load');
+}
+
+// ── Selected images strip ────────────────────────────────────────────────
+function addSelectedImage(url, source) {
+  // Check if already selected
+  for (var i = 0; i < selectedImages.length; i++) {
+    if (selectedImages[i].url === url) {
+      // Deselect
+      selectedImages.splice(i, 1);
+      updateSelectedStrip();
+      return false; // was deselected
+    }
   }
+  selectedImages.push({ url: url, source: source || 'photo' });
+  flow.imageUrl = selectedImages[0].url;
+  flow.imageUrls = selectedImages.map(function(i) { return i.url; });
+  updateSelectedStrip();
+  return true; // was selected
+}
+
+function updateSelectedStrip() {
+  var strip = document.getElementById('selectedImagesStrip');
+  var thumbs = document.getElementById('selectedThumbs');
+  var count = document.getElementById('selectedCount');
+  var tag = document.getElementById('imgTypeTag');
+  if (!strip || !thumbs) return;
+  if (selectedImages.length === 0) {
+    strip.style.display = 'none';
+    if (tag) tag.textContent = '—';
+    return;
+  }
+  strip.style.display = 'block';
+  if (count) count.textContent = selectedImages.length;
+  if (tag) tag.textContent = selectedImages.length > 1 ? '🎠 Carousel (' + selectedImages.length + ')' : '📸 Single';
+  thumbs.innerHTML = '';
+  selectedImages.forEach(function(img, idx) {
+    var wrap = document.createElement('div');
+    wrap.style.cssText = 'position:relative;width:64px;height:64px;flex-shrink:0';
+    var thumb = document.createElement('img');
+    thumb.src = img.url;
+    thumb.style.cssText = 'width:64px;height:64px;object-fit:cover;border-radius:6px;cursor:pointer;border:2px solid var(--gold)';
+    thumb.onclick = function() { openLightbox(img.url); };
+    var del = document.createElement('button');
+    del.textContent = '×';
+    del.style.cssText = 'position:absolute;top:-6px;right:-6px;width:18px;height:18px;border-radius:50%;background:var(--red);color:white;border:none;cursor:pointer;font-size:12px;line-height:1;display:flex;align-items:center;justify-content:center;padding:0';
+    del.onclick = function(e) { e.stopPropagation(); selectedImages.splice(idx,1); updateSelectedStrip(); refreshPexelsSelection(); };
+    wrap.appendChild(thumb);
+    wrap.appendChild(del);
+    thumbs.appendChild(wrap);
+  });
+  flow.imageUrl = selectedImages[0].url;
+  flow.imageUrls = selectedImages.map(function(i) { return i.url; });
+}
+
+// ── Lightbox ─────────────────────────────────────────────────────────────
+function openLightbox(url) {
+  var lb = document.getElementById('lightbox');
+  var img = document.getElementById('lightboxImg');
+  if (!lb || !img) return;
+  img.src = url;
+  lb.style.display = 'flex';
+}
+
+function closeLightbox() {
+  var lb = document.getElementById('lightbox');
+  if (lb) lb.style.display = 'none';
+}
+
+// ── Pexels multi-select ──────────────────────────────────────────────────
+async function searchPexels(customQuery) {
+  var query = customQuery || (document.getElementById('pexelsSearch') ? document.getElementById('pexelsSearch').value.trim() : '');
+  if (!query) return;
+  var resultsEl = document.getElementById('pexelsResults');
+  if (resultsEl) resultsEl.innerHTML = '<div style="color:var(--muted);font-size:13px;grid-column:1/-1;text-align:center;padding:12px">Searching...</div>';
+  try {
+    var r = await fetch('https://api.pexels.com/v1/search?query=' + encodeURIComponent(query) + '&per_page=12&orientation=square', {
+      headers: { 'Authorization': PEXELS_API_KEY }
+    });
+    if (!r.ok) throw new Error('Pexels ' + r.status);
+    var d = await r.json();
+    var photos = d.photos || [];
+    if (!photos.length) {
+      if (resultsEl) resultsEl.innerHTML = '<div style="color:var(--muted);font-size:13px;grid-column:1/-1;text-align:center">No results — try different keywords</div>';
+      return;
+    }
+    if (resultsEl) {
+      resultsEl.innerHTML = '';
+      photos.forEach(function(p) {
+        var wrap = document.createElement('div');
+        wrap.style.cssText = 'position:relative;cursor:pointer';
+        var img = document.createElement('img');
+        img.src = p.src.medium;
+        img.dataset.large = p.src.large;
+        img.dataset.id = p.id;
+        img.style.cssText = 'width:100%;aspect-ratio:1/1;object-fit:cover;border-radius:6px;border:2px solid transparent;transition:border-color 0.15s';
+        img.title = p.photographer;
+
+        // Check if already selected
+        var alreadySelected = selectedImages.some(function(s) { return s.url === p.src.large; });
+        if (alreadySelected) img.style.borderColor = 'var(--gold)';
+
+        img.onclick = function() {
+          var wasSelected = addSelectedImage(p.src.large, 'pexels');
+          img.style.borderColor = wasSelected ? 'var(--gold)' : 'transparent';
+        };
+
+        // Expand on long press / right click
+        var expandBtn = document.createElement('button');
+        expandBtn.textContent = '⤢';
+        expandBtn.style.cssText = 'position:absolute;bottom:4px;right:4px;padding:2px 6px;background:rgba(0,0,0,0.7);color:white;border:none;border-radius:4px;font-size:11px;cursor:pointer';
+        expandBtn.onclick = function(e) { e.stopPropagation(); openLightbox(p.src.large); };
+
+        wrap.appendChild(img);
+        wrap.appendChild(expandBtn);
+        resultsEl.appendChild(wrap);
+      });
+    }
+  } catch(e) {
+    console.warn('Pexels error:', e.message);
+    if (resultsEl) resultsEl.innerHTML = '<div style="color:var(--red);font-size:13px;grid-column:1/-1;text-align:center">Could not load photos — check Pexels API key</div>';
+  }
+}
+
+function refreshPexelsSelection() {
+  // Update border states after deselection
+  document.querySelectorAll('#pexelsResults img').forEach(function(img) {
+    var large = img.dataset.large;
+    var sel = selectedImages.some(function(s) { return s.url === large; });
+    img.style.borderColor = sel ? 'var(--gold)' : 'transparent';
+  });
+}
+
+function autoSearchPexels() {
+  var gl = geoLabel();
+  var queries = {
+    market_monday: gl + ' Utah neighborhood homes spring',
+    community: gl + ' Utah community park families',
+    weekend_re: gl + ' Utah house for sale',
+    blog_teaser: 'Utah real estate market',
+  };
+  var q = queries[flow.postType] || 'Utah real estate';
+  var searchEl = document.getElementById('pexelsSearch');
+  if (searchEl) searchEl.value = q;
+  searchPexels(q);
+}
+
+// ── DALL-E carousel slide builder ────────────────────────────────────────
+function initDalleSlides() {
+  var slideCount = CAROUSEL_COUNTS[flow.postType] || 3;
+  var container = document.getElementById('dalleSlides');
+  if (!container) return;
+  container.innerHTML = '';
+  var v = flow.variations && flow.variations[flow.selVar];
+  var baseBrief = v ? v.imageBrief.replace(/^(SOURCED:|GENERATED:|CAROUSEL:)/,'').trim() : 'Utah real estate branded graphic';
+  var slideLabels = getSlideLabels(flow.postType);
+  for (var i = 0; i < slideCount; i++) {
+    var slide = document.createElement('div');
+    slide.style.cssText = 'margin-bottom:12px;padding:12px;background:var(--elevated);border:1px solid var(--faint);border-radius:8px';
+    var label = document.createElement('div');
+    label.style.cssText = 'font-size:12px;color:var(--gold);font-family:var(--mono);margin-bottom:6px';
+    label.textContent = 'Slide ' + (i+1) + (slideLabels[i] ? ' — ' + slideLabels[i] : '');
+    var ta = document.createElement('textarea');
+    ta.rows = 2;
+    ta.id = 'dalleSlide_' + i;
+    ta.placeholder = 'Describe slide ' + (i+1) + '...';
+    ta.value = buildSlidePrompt(baseBrief, i, flow.postType);
+    ta.style.cssText = 'width:100%;font-size:13px;margin-top:4px';
+    var resultDiv = document.createElement('div');
+    resultDiv.id = 'dalleResult_' + i;
+    resultDiv.style.cssText = 'margin-top:8px;display:none';
+    slide.appendChild(label);
+    slide.appendChild(ta);
+    slide.appendChild(resultDiv);
+    container.appendChild(slide);
+  }
+}
+
+function getSlideLabels(postType) {
+  var labels = {
+    market_monday: ['Market Stat', 'Context', 'CTA'],
+    community: ['Hero Shot', 'Highlight 1', 'Highlight 2', 'CTA'],
+    weekend_re: ['Cover', 'Property 1', 'Property 2', 'Property 3', 'CTA'],
+    blog_teaser: ['Hook', 'Key Point', 'Read More'],
+  };
+  return labels[postType] || [];
+}
+
+function buildSlidePrompt(baseBrief, slideIndex, postType) {
+  var gl = geoLabel();
+  var brand = 'Navy blue background #0D1A28, gold accent #D4A843. Utah Vista Homes branding. Clean professional real estate style. No people.';
+  var slides = {
+    market_monday: [
+      baseBrief + '. Bold market statistic as the focal point. ' + brand,
+      'Context graphic supporting the market data for ' + gl + '. ' + brand,
+      'Call to action — homes in ' + gl + '. ' + brand,
+    ],
+    community: [
+      'Beautiful community scene in ' + gl + ' Utah. ' + brand,
+      'Local neighborhood highlight, ' + gl + '. ' + brand,
+      'Community amenity or landmark, ' + gl + '. ' + brand,
+      'Welcoming call to action for ' + gl + ' residents. ' + brand,
+    ],
+    weekend_re: [
+      'Elegant real estate cover slide for properties in ' + gl + '. ' + brand,
+      'Modern home exterior, Utah County. ' + brand,
+      'Interior living space, bright and modern. ' + brand,
+      'Backyard or outdoor space, Utah home. ' + brand,
+      'Call to action — find your home in ' + gl + '. ' + brand,
+    ],
+    blog_teaser: [
+      'Eye-catching hook graphic: ' + baseBrief + '. ' + brand,
+      'Key insight from the blog, ' + gl + ' real estate. ' + brand,
+      'Read more CTA — Utah Vista Homes blog. ' + brand,
+    ],
+  };
+  var set = slides[postType] || [baseBrief + '. ' + brand];
+  return set[slideIndex] || set[0];
+}
+
+function addDalleSlide() {
+  var container = document.getElementById('dalleSlides');
+  if (!container) return;
+  var idx = container.children.length;
+  var slide = document.createElement('div');
+  slide.style.cssText = 'margin-bottom:12px;padding:12px;background:var(--elevated);border:1px solid var(--faint);border-radius:8px';
+  var label = document.createElement('div');
+  label.style.cssText = 'font-size:12px;color:var(--gold);font-family:var(--mono);margin-bottom:6px';
+  label.textContent = 'Slide ' + (idx+1) + ' (custom)';
+  var ta = document.createElement('textarea');
+  ta.rows = 2;
+  ta.id = 'dalleSlide_' + idx;
+  ta.placeholder = 'Describe this slide...';
+  ta.style.cssText = 'width:100%;font-size:13px;margin-top:4px';
+  var resultDiv = document.createElement('div');
+  resultDiv.id = 'dalleResult_' + idx;
+  resultDiv.style.cssText = 'margin-top:8px;display:none';
+  slide.appendChild(label);
+  slide.appendChild(ta);
+  slide.appendChild(resultDiv);
+  container.appendChild(slide);
+}
+
+async function generateAllSlides() {
+  var btn = document.getElementById('generateImgBtn');
+  var status = document.getElementById('imgStatus');
+  var container = document.getElementById('dalleSlides');
+  if (!container) return;
+  var slides = container.querySelectorAll('textarea');
+  if (!slides.length) return;
+  if (btn) { btn.disabled = true; btn.textContent = 'Generating slides...'; }
+  if (status) { status.style.display = 'block'; status.textContent = 'Generating ' + slides.length + ' slides — this takes about ' + (slides.length * 12) + ' seconds...'; }
+  // Clear previous selections from generate tab
+  selectedImages = selectedImages.filter(function(i) { return i.source !== 'dalle'; });
+  for (var i = 0; i < slides.length; i++) {
+    var prompt = slides[i].value.trim();
+    if (!prompt) continue;
+    if (status) status.textContent = 'Generating slide ' + (i+1) + ' of ' + slides.length + '...';
+    try {
+      var r = await fetch(WORKER_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ api:'openai', model:'dall-e-3', prompt:prompt, n:1, size:'1024x1024', quality:'standard' }),
+      });
+      var d = await r.json();
+      var url = d.data && d.data[0] ? d.data[0].url : '';
+      if (url) {
+        addSelectedImage(url, 'dalle');
+        var resultDiv = document.getElementById('dalleResult_' + i);
+        if (resultDiv) {
+          resultDiv.style.display = 'block';
+          resultDiv.innerHTML = '';
+          var img = document.createElement('img');
+          img.src = url;
+          img.style.cssText = 'width:100%;border-radius:6px;cursor:pointer;border:2px solid var(--green)';
+          img.onclick = function(u) { return function() { openLightbox(u); }; }(url);
+          resultDiv.appendChild(img);
+        }
+      }
+    } catch(e) {
+      console.warn('Slide ' + i + ' error:', e.message);
+    }
+  }
+  if (status) status.textContent = 'Done! ' + selectedImages.filter(function(i){return i.source==='dalle';}).length + ' slides generated.';
+  if (btn) { btn.disabled = false; btn.textContent = 'Regenerate Slides →'; }
+}
+
+async function generateImage() {
+  return generateAllSlides();
+}
+
+// ── Upload handler — multi-file ──────────────────────────────────────────
+function handleUpload(inp) {
+  var files = inp.files;
+  if (!files || !files.length) return;
+  // Clear existing uploaded images
+  selectedImages = selectedImages.filter(function(i) { return i.source !== 'upload'; });
+  for (var i = 0; i < files.length; i++) {
+    var url = URL.createObjectURL(files[i]);
+    addSelectedImage(url, 'upload');
+  }
+}
+
+function checkReplaceUrl(inp) {
+  if (inp.value && inp.value.startsWith('http')) {
+    selectedImages = selectedImages.filter(function(i) { return i.source !== 'url'; });
+    addSelectedImage(inp.value, 'url');
+  }
+}
+
+function openImageSource() {
+  if (flow.imageUrl) window.open(flow.imageUrl, '_blank');
+}
+
+// ── Listing URL photo extractor ──────────────────────────────────────────
+async function extractListingPhotos() {
+  var input = document.getElementById('listingUrls');
+  var btn = document.getElementById('extractBtn');
+  var status = document.getElementById('extractStatus');
+  if (!input || !input.value.trim()) return;
+  var urls = input.value.split(',').map(function(u) { return u.trim(); }).filter(Boolean);
+  var multipleUrls = urls.length > 1;
+  if (btn) { btn.disabled = true; btn.textContent = 'Extracting...'; }
+  if (status) { status.style.display = 'block'; status.textContent = 'Fetching listing pages...'; }
+  selectedImages = selectedImages.filter(function(i) { return i.source !== 'listing'; });
+  try {
+    for (var i = 0; i < urls.length; i++) {
+      var url = urls[i];
+      if (status) status.textContent = 'Processing listing ' + (i+1) + ' of ' + urls.length + '...';
+      // Use Claude to extract image URLs from the listing page HTML
+      var raw = await callClaude([{ role:'user', content:
+        'Fetch this real estate listing page and extract ' + (multipleUrls ? 'the first (cover) photo URL' : 'the first 3-5 photo URLs') + ' from ' + url + '. Look for og:image meta tags, large img src attributes, or JSON-LD image arrays. Return only the image URLs as a JSON array: ["url1","url2"]. If you cannot access the page return [].'
+      }], 'You are a web scraping assistant. Extract image URLs from real estate listing pages. Return only valid JSON arrays of image URLs.', 400);
+      var result = null;
+      try { result = JSON.parse(raw.replace(/```json|```/g,'').trim()); } catch(e) { result = []; }
+      var imgUrls = Array.isArray(result) ? result : [];
+      var limit = multipleUrls ? 1 : 5;
+      imgUrls.slice(0, limit).forEach(function(imgUrl) {
+        if (imgUrl && imgUrl.startsWith('http')) addSelectedImage(imgUrl, 'listing');
+      });
+    }
+    if (status) status.textContent = selectedImages.filter(function(i){return i.source==='listing';}).length + ' photos extracted.';
+  } catch(e) {
+    if (status) status.textContent = 'Could not extract photos — try uploading manually.';
+    console.warn('Listing extract error:', e.message);
+  }
+  if (btn) { btn.disabled = false; btn.textContent = 'Extract Photos →'; }
 }
 
 // ── Pexels search ─────────────────────────────────────────────────────────
@@ -1574,34 +1937,39 @@ function renderReview() {
   renderTimePills();
   renderAnalyticsPanel();
 
-  // Initialize image panel
-  const v = flow.variations && flow.variations[0];
-  // Set DALL-E prompt from variation brief
-  const dalleEl = document.getElementById('dallePrompt');
-  if (dalleEl && v && v.imageBrief) {
-    const brief = v.imageBrief.replace(/^(SOURCED:|GENERATED:|CAROUSEL:)/,'').trim();
-    dalleEl.value = brief + ' Navy #0D1A28 and gold #D4A843 branding. Professional real estate style.';
-  }
+  // Reset selected images for new variation set
+  selectedImages = [];
+  updateSelectedStrip();
+
+  // Show listing tab only for Weekend Real Estate
+  var listingTab = document.getElementById('tabBtnListing');
+  if (listingTab) listingTab.style.display = flow.postType === 'weekend_re' ? 'inline-flex' : 'none';
+
   // Set Pexels brief hint
-  const briefEl = document.getElementById('imgBriefDisplay');
-  if (briefEl && v) briefEl.textContent = v.imageBrief || '';
-  // Default tab and auto-search based on post type
-  const defaultTab = (flow.postType === 'market_monday' || flow.postType === 'blog_teaser') ? 'generate' : 'source';
-  const tabs = document.querySelectorAll('.img-tab');
-  tabs.forEach(function(t) { t.classList.remove('active'); });
+  var briefEl = document.getElementById('imgBriefDisplay');
+  var v0 = flow.variations && flow.variations[0];
+  if (briefEl && v0) briefEl.textContent = v0.imageBrief || '';
+
+  // Default tab based on post type
+  var defaultTab = (flow.postType === 'market_monday' || flow.postType === 'blog_teaser') ? 'generate' : (flow.postType === 'weekend_re' ? 'listing' : 'source');
+  var tabBtn = document.getElementById('tabBtn' + defaultTab.charAt(0).toUpperCase() + defaultTab.slice(1)) || document.getElementById('tabBtnSource');
+  document.querySelectorAll('.img-tab').forEach(function(t) { t.classList.remove('active'); });
+  if (tabBtn) tabBtn.classList.add('active');
+  switchImgTab(defaultTab, tabBtn || document.querySelector('.img-tab'));
+
+  // Init DALL-E slides or auto-search Pexels
   if (defaultTab === 'generate') {
-    tabs[1] && tabs[1].classList.add('active');
-    switchImgTab('generate', tabs[1] || tabs[0]);
-  } else {
-    tabs[0] && tabs[0].classList.add('active');
-    switchImgTab('source', tabs[0]);
+    setTimeout(initDalleSlides, 100);
+  } else if (defaultTab === 'source') {
     autoSearchPexels();
   }
-  // Show loading state initially
-  const loading = document.getElementById('imgLoadingState');
-  const preview = document.getElementById('imgPreview');
-  if (loading) loading.style.display = 'flex';
-  if (preview) preview.style.display = 'none';
+
+  // Set default schedule date/time
+  var tomorrow = new Date();
+  tomorrow.setDate(tomorrow.getDate() + 1);
+  var dateStr = tomorrow.toISOString().slice(0,10);
+  var dateEl = document.getElementById('schedDate');
+  if (dateEl) dateEl.value = dateStr;
 
   const noWarn = document.getElementById('noWebhookWarn');
   noWarn.style.display = store.webhook() ? 'none' : 'block';
@@ -1686,17 +2054,48 @@ function updateWordCount() {
 }
 
 function renderTimePills() {
-  const times = SUGGESTED_TIMES[flow.postType] || [];
-  document.getElementById('timePills').innerHTML = times.map((t,i) => `
-    <button class="time-pill" onclick="selectTime('${t}',this)">
-      ${t}${i===0?' ★':''}
-    </button>`).join('');
+  var times = SUGGESTED_TIMES[flow.postType] || [];
+  var pillsEl = document.getElementById('timePills');
+  if (!pillsEl) return;
+  pillsEl.innerHTML = '';
+  times.forEach(function(t, i) {
+    var btn = document.createElement('button');
+    btn.className = 'time-pill' + (i === 0 ? ' selected' : '');
+    btn.textContent = t + (i === 0 ? ' ★' : '');
+    btn.onclick = function() { selectTime(t, btn); };
+    pillsEl.appendChild(btn);
+  });
+  // Set first time as default in the time input
+  if (times.length) {
+    var timeInput = document.getElementById('schedTimeInput');
+    if (timeInput) {
+      // Convert "6:30 PM MT" to 24h "18:30"
+      var converted = convertTo24h(times[0]);
+      if (converted) timeInput.value = converted;
+    }
+  }
+}
+
+function convertTo24h(timeStr) {
+  // Convert "6:30 PM MT" or "7:00 AM MT" to "18:30" or "07:00"
+  var match = timeStr.match(/(\d+):(\d+)\s*(AM|PM)/i);
+  if (!match) return '';
+  var h = parseInt(match[1]);
+  var m = match[2];
+  var ampm = match[3].toUpperCase();
+  if (ampm === 'PM' && h !== 12) h += 12;
+  if (ampm === 'AM' && h === 12) h = 0;
+  return (h < 10 ? '0' : '') + h + ':' + m;
 }
 
 function selectTime(t, btn) {
-  document.querySelectorAll('.time-pill').forEach(p => p.classList.remove('selected'));
+  document.querySelectorAll('.time-pill').forEach(function(p) { p.classList.remove('selected'); });
   btn.classList.add('selected');
-  document.getElementById('schedTime').value = t;
+  var timeInput = document.getElementById('schedTimeInput');
+  if (timeInput) {
+    var converted = convertTo24h(t);
+    if (converted) timeInput.value = converted;
+  }
 }
 
 function renderAnalyticsPanel() {
@@ -1729,24 +2128,32 @@ function handleUpload(inp) {
 async function publish() {
   const webhook = store.webhook();
   if (!webhook) { document.getElementById('noWebhookWarn').style.display='block'; return; }
-  const sched = document.getElementById('schedTime').value.trim();
-  if (!sched) { alert('Please select or enter a schedule time.'); return; }
+  var schedDate = document.getElementById('schedDate') ? document.getElementById('schedDate').value : '';
+  var schedTimeVal = document.getElementById('schedTimeInput') ? document.getElementById('schedTimeInput').value : '';
+  if (!schedDate || !schedTimeVal) { alert('Please select a date and time.'); return; }
+  var sched = schedDate + ' ' + schedTimeVal;
 
   const btn = document.getElementById('publishBtn');
   btn.disabled = true;
   btn.innerHTML = '<span class="spinner" style="width:14px;height:14px"></span> Sending...';
 
   const v = flow.variations[flow.selVar];
-  const payload = {
+  var imgUrls = flow.imageUrls && flow.imageUrls.length ? flow.imageUrls : (flow.imageUrl ? [flow.imageUrl] : []);
+  var payload = {
     postType: flow.postType,
     geo: geoLabel(),
     fbCaption: document.getElementById('fbCaption').value,
     igCaption: document.getElementById('igCaption').value,
-    firstCommentLink: v?.firstCommentLink || 'https://utvistahomes.com',
-    imageUrl: flow.imageUrl,
-    scheduleTime: sched,
-    hashtags: v?.hashtags || [],
-    format: v?.format || 'standard',
+    firstCommentLink: (v ? v.firstCommentLink : null) || 'https://utvistahomes.com',
+    imageUrl: imgUrls[0] || '',
+    imageUrls: imgUrls,
+    imageCount: imgUrls.length,
+    isCarousel: imgUrls.length > 1,
+    scheduleDate: schedDate,
+    scheduleTime: schedTimeVal,
+    scheduleDatetime: sched,
+    hashtags: (v ? v.hashtags : null) || [],
+    format: imgUrls.length > 1 ? 'carousel' : 'standard',
     approvedAt: new Date().toISOString(),
   };
 
@@ -1778,7 +2185,7 @@ async function publish() {
   store.clearSession();
   updateVoiceCount();
 
-  document.getElementById('doneTime').textContent = sched;
+  document.getElementById('doneTime').textContent = schedDate + ' at ' + schedTimeVal + ' MT';
   btn.disabled = false;
   btn.innerHTML = 'Approve &amp; Schedule →';
   showPage('pageDone');
