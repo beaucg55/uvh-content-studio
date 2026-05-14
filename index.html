@@ -307,6 +307,23 @@ nav{border-bottom:1px solid var(--gold-border);padding:18px 32px;display:flex;ju
     <h1 class="display fu" style="font-size:clamp(28px,4vw,40px);margin-bottom:8px">Set the stage</h1>
     <p style="color:var(--muted);font-size:14px;margin-bottom:28px;line-height:1.65">Pick a trending hook and share what's on your mind this week.</p>
 
+    <!-- Neighborhood Brief — Community Spotlight only -->
+    <div class="card" id="neighborhoodBriefCard" style="display:none;margin-bottom:14px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+        <div style="font-size:14px;font-weight:700;color:#C8BFA8;font-family:var(--body)" id="neighborhoodBriefTitle">Neighborhood Brief</div>
+        <div id="neighborhoodBriefLoading" style="font-size:12px;color:var(--muted);display:flex;align-items:center;gap:6px"><span class="spinner" style="width:12px;height:12px"></span>Loading brief...</div>
+      </div>
+      <div id="neighborhoodBriefContent"></div>
+      <div class="color-key">
+        <div class="key-item"><div class="key-dot" style="background:#3D9E6A"></div>Sourced data</div>
+        <div class="key-item"><div class="key-dot" style="background:#D4A843"></div>Local knowledge / estimate</div>
+      </div>
+      <div id="neighborhoodReviewRow" style="display:none;align-items:center;gap:10px;margin-top:14px;padding-top:12px;border-top:1px solid var(--faint)">
+        <input type="checkbox" id="neighborhoodReviewCheck" style="width:18px;height:18px;cursor:pointer;accent-color:var(--gold)" onchange="if(this.checked) onNeighborhoodReviewed()"/>
+        <label for="neighborhoodReviewCheck" style="font-size:14px;color:var(--off);cursor:pointer">Brief reviewed — load trending topics and questions</label>
+      </div>
+    </div>
+
     <!-- Market Brief — Market Monday only -->
     <div class="card" id="marketBriefCard" style="display:none;margin-bottom:14px">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
@@ -721,7 +738,7 @@ function resolveSourceUrl(srcName) {
 
 // All API calls route through Cloudflare Worker — no keys in this file
 const WORKER_URL = 'https://uvh-proxy.beaucg55.workers.dev/';
-const PEXELS_API_KEY = 'Ha6kPeugx7h7LsklcKh5Tu6R4FMOvEgp0OEwCkvXDjCGGY5ppAZJYZki'; // pexels.com/api — add yours here
+const PEXELS_API_KEY = 'YOUR_PEXELS_KEY'; // pexels.com/api — add yours here
 
 async function callClaude(messages, system, maxTokens=2000) {
   const r = await fetch(WORKER_URL, {
@@ -908,15 +925,25 @@ function goStep2() {
   const questionsWrap = document.getElementById('questionsWrap');
   const step2Next = document.getElementById('step2Next');
 
+  var neighborhoodCard = document.getElementById('neighborhoodBriefCard');
+
   if (flow.postType === 'market_monday') {
-    // Show brief, hide everything else until brief is reviewed
     briefCard.style.display = 'block';
+    if (neighborhoodCard) neighborhoodCard.style.display = 'none';
     if (trendSection) trendSection.style.display = 'none';
     if (questionsWrap) questionsWrap.style.display = 'none';
     if (step2Next) step2Next.style.display = 'none';
     fetchMarketBrief();
+  } else if (flow.postType === 'community') {
+    if (neighborhoodCard) neighborhoodCard.style.display = 'block';
+    briefCard.style.display = 'none';
+    if (trendSection) trendSection.style.display = 'none';
+    if (questionsWrap) questionsWrap.style.display = 'none';
+    if (step2Next) step2Next.style.display = 'none';
+    fetchNeighborhoodBrief();
   } else {
     briefCard.style.display = 'none';
+    if (neighborhoodCard) neighborhoodCard.style.display = 'none';
     if (trendSection) trendSection.style.display = 'block';
     if (questionsWrap) questionsWrap.style.display = 'block';
     if (step2Next) step2Next.style.display = 'block';
@@ -945,6 +972,121 @@ function onBriefReviewed() {
 // ═══════════════════════════════════════════════════════
 // STEP 2: TRENDS + QUESTIONS
 // ═══════════════════════════════════════════════════════
+function onNeighborhoodReviewed() {
+  var trendSection = document.getElementById('trendSection');
+  var questionsWrap = document.getElementById('questionsWrap');
+  var step2Next = document.getElementById('step2Next');
+  if (trendSection) { trendSection.style.display = 'block'; trendSection.style.visibility = 'visible'; }
+  if (questionsWrap) { questionsWrap.style.display = 'block'; questionsWrap.style.visibility = 'visible'; questionsWrap.innerHTML = ''; }
+  if (step2Next) { step2Next.style.display = 'block'; step2Next.style.visibility = 'visible'; }
+  fetchTrends().then(function() {
+    setTimeout(function() { renderQuestions(); }, 200);
+  });
+}
+
+async function fetchNeighborhoodBrief() {
+  var gl = geoLabel();
+  var today = todayDate();
+  var briefContent = document.getElementById('neighborhoodBriefContent');
+  var briefLoading = document.getElementById('neighborhoodBriefLoading');
+  var briefTitle = document.getElementById('neighborhoodBriefTitle');
+  var reviewRow = document.getElementById('neighborhoodReviewRow');
+  if (briefTitle) briefTitle.textContent = gl + ' — Neighborhood Brief';
+
+  var SECTIONS = [
+    { id:'vibe',       label:'Vibe & Character',   prompt:'2-3 words that describe the neighborhood feel, lifestyle, and community identity' },
+    { id:'lifestyle',  label:'Who Lives Here',      prompt:'the typical resident profile — families, young professionals, retirees, mix — and what draws them to this area' },
+    { id:'price',      label:'Price Range',         prompt:'typical home price range for this neighborhood and how it compares to surrounding areas' },
+    { id:'highlights', label:'Hidden Gems',         prompt:'specific local businesses, parks, trails, restaurants, schools, or landmarks worth highlighting' },
+    { id:'growth',     label:'Growth & Development',prompt:'any notable new development, infrastructure improvements, or trends shaping this neighborhood' },
+    { id:'ideal_for',  label:'Ideal For',           prompt:'who this neighborhood is ideal for in terms of lifestyle, life stage, and priorities' },
+  ];
+
+  try {
+    var sectionPrompts = SECTIONS.map(function(s) { return s.id + ': ' + s.prompt; }).join('; ');
+
+    var raw = await callClaude([{ role:'user', content:
+      'Today is ' + today + '. Generate a neighborhood spotlight brief for ' + gl + ', Utah covering: ' + sectionPrompts + '. Be specific to this actual neighborhood — real local knowledge, not generic descriptions. For each point label S (sourced from known local data or well-established facts about this area) or E (your informed estimate or general knowledge). Return JSON only: {"vibe":[{"text":"...","type":"S or E","src":"source or empty"}],"lifestyle":[{"text":"...","type":"S or E","src":""}],"price":[{"text":"...","type":"S or E","src":""}],"highlights":[{"text":"...","type":"S or E","src":""}],"growth":[{"text":"...","type":"S or E","src":""}],"ideal_for":[{"text":"...","type":"S or E","src":""}]}'
+    }], 'You are a Utah real estate local area expert with deep knowledge of northern Utah County neighborhoods. Be specific and local. Return valid compact JSON only. No markdown.', 900);
+
+    var r = parseJSON(raw);
+    if (!r) throw new Error('JSON parse failed');
+
+    briefContent.innerHTML = '';
+    var briefLines = [];
+    var firstHighlight = '';
+
+    SECTIONS.forEach(function(sec) {
+      var items = r[sec.id] || [];
+      if (!items.length) return;
+
+      var secHead = document.createElement('div');
+      secHead.style.cssText = 'font-size:12px;font-weight:700;color:#C8BFA8;letter-spacing:0.06em;text-transform:uppercase;margin:14px 0 6px;padding-bottom:4px;border-bottom:1px solid rgba(212,168,67,0.2)';
+      secHead.textContent = sec.label;
+      briefContent.appendChild(secHead);
+
+      items.forEach(function(item) {
+        if (!item.text) return;
+        if (!firstHighlight && sec.id === 'highlights') firstHighlight = item.text;
+
+        var block = document.createElement('div');
+        block.style.cssText = 'padding:6px 0 8px;border-bottom:1px solid var(--faint)';
+
+        var val = document.createElement('div');
+        var textColor = item.type === 'S' ? '#3D9E6A' : item.type === 'E' ? '#D4A843' : '#C8BFA8';
+        val.style.cssText = 'font-size:14px;line-height:1.55;color:' + textColor;
+        val.textContent = item.text;
+        block.appendChild(val);
+
+        if (item.type === 'S' && item.src) {
+          var verifiedUrl = resolveSourceUrl(item.src);
+          var srcLine = document.createElement('div');
+          srcLine.style.cssText = 'font-size:12px;font-style:italic;color:#3D9E6A;margin-top:3px';
+          srcLine.textContent = 'Source: ';
+
+          if (verifiedUrl) {
+            var link = document.createElement('a');
+            link.href = verifiedUrl;
+            link.target = '_blank';
+            link.rel = 'noopener';
+            link.style.cssText = 'font-size:12px;font-style:italic;color:#4A92C6;text-decoration:none';
+            link.textContent = item.src;
+            link.onmouseover = function() { this.style.textDecoration = 'underline'; };
+            link.onmouseout = function() { this.style.textDecoration = 'none'; };
+            srcLine.appendChild(link);
+          } else {
+            srcLine.textContent += item.src;
+          }
+          block.appendChild(srcLine);
+        }
+
+        briefContent.appendChild(block);
+        briefLines.push(sec.label + ': ' + item.text);
+      });
+    });
+
+    // Store for use in generation prompt
+    flow._neighborhoodBrief = briefLines.join(' | ');
+    flow._neighborhoodHighlight = firstHighlight;
+
+    if (briefLoading) briefLoading.style.display = 'none';
+    if (reviewRow) reviewRow.style.display = 'flex';
+
+  } catch(e) {
+    console.warn('fetchNeighborhoodBrief error:', e.message);
+    if (briefContent) {
+      var err = document.createElement('div');
+      err.style.cssText = 'font-size:14px;color:var(--muted);padding:8px 0';
+      err.textContent = 'Neighborhood brief unavailable. Click below to continue.';
+      briefContent.appendChild(err);
+    }
+    if (briefLoading) briefLoading.style.display = 'none';
+    if (reviewRow) reviewRow.style.display = 'flex';
+    flow._neighborhoodBrief = '';
+    flow._neighborhoodHighlight = '';
+  }
+}
+
 async function fetchMarketBrief() {
   const gl = geoLabel();
   const today = todayDate();
@@ -1242,9 +1384,12 @@ async function fetchSuggestions(q, gl, onAnswered) {
       if (!el) return;
 
       el.innerHTML = '';
-      // For Market Monday first question, prepend a brief-sourced suggestion
+      // For Market Monday / Community Spotlight first question, prepend a brief-sourced suggestion
       const isFirstQ = (currentQuestionIndex === 1 || el.id === 'sugg_q1');
-      if (flow.postType === 'market_monday' && isFirstQ && flow._briefPreload) {
+      const briefPreload = flow._briefPreload || flow._neighborhoodHighlight || '';
+      const preloadPostType = flow.postType === 'market_monday' || flow.postType === 'community';
+      if (preloadPostType && isFirstQ && briefPreload) {
+        flow._briefPreload = briefPreload; // normalize
         const preBtn = document.createElement('button');
         preBtn.className = 'sugg-btn';
         preBtn.dataset.qid = q.id;
@@ -1367,7 +1512,12 @@ async function runGeneration() {
 
     setStatus('Writing three variations...', 50);
     const todayFull = todayDate();
-    const briefContext = flow._marketBrief ? 'MARKET BRIEF CONTEXT for ' + geoLabel() + ': ' + flow._marketBrief + '. Use this data to inform the post unless the user has selected a different focus.' : '';
+    var briefContext = '';
+    if (flow._marketBrief) {
+      briefContext = 'MARKET BRIEF CONTEXT for ' + geoLabel() + ': ' + flow._marketBrief + '. Use this data to inform the post unless the user selected a different focus.';
+    } else if (flow._neighborhoodBrief) {
+      briefContext = 'NEIGHBORHOOD SPOTLIGHT CONTEXT for ' + geoLabel() + ': ' + flow._neighborhoodBrief + '. Use this local knowledge to make the post feel specific, authentic, and genuinely local to this neighborhood.';
+    }
     const vc = store.voice().slice(0,6).map(e =>
       `[${e.date}|${e.postType}|${e.city||'Regional'}]: "${e.approvedCaption.slice(0,160)}"${e.voiceNote?` (note: "${e.voiceNote}")`:''}`)
       .join('\n');
@@ -1650,33 +1800,40 @@ function getSlideLabels(postType) {
 
 function buildSlidePrompt(baseBrief, slideIndex, postType) {
   var gl = geoLabel();
-  var brand = 'Navy blue background #0D1A28, gold accent #D4A843. Utah Vista Homes branding. Clean professional real estate style. No people.';
+  // DALL-E prompt principles:
+  // - No text, charts, statistics, or data visualizations — DALL-E cannot render these reliably
+  // - Atmospheric, photorealistic or painterly style — what DALL-E does well
+  // - Navy and gold color palette to match brand
+  // - No people — avoids consent and likeness issues
+  var style = 'Photorealistic architectural photography style. Navy blue and deep twilight tones, warm gold ambient lighting. Utah mountain backdrop. No text, no overlays, no charts, no statistics. No people.';
   var slides = {
     market_monday: [
-      baseBrief + '. Bold market statistic as the focal point. ' + brand,
-      'Context graphic supporting the market data for ' + gl + '. ' + brand,
-      'Call to action — homes in ' + gl + '. ' + brand,
+      'Aerial view of a prosperous ' + gl + ' Utah neighborhood in spring. Well-maintained homes on tree-lined streets, Wasatch mountains visible in background. Golden hour lighting. ' + style,
+      'Beautiful single-family home exterior in ' + gl + ' Utah. Manicured lawn, mature trees, mountain backdrop. Spring afternoon light. ' + style,
+      'Inviting home entrance and front porch in a ' + gl + ' Utah neighborhood. Warm interior light glowing through windows at dusk. ' + style,
     ],
     community: [
-      'Beautiful community scene in ' + gl + ' Utah. ' + brand,
-      'Local neighborhood highlight, ' + gl + '. ' + brand,
-      'Community amenity or landmark, ' + gl + '. ' + brand,
-      'Welcoming call to action for ' + gl + ' residents. ' + brand,
+      'Panoramic view of ' + gl + ' Utah community at golden hour. Residential neighborhood, parks, Wasatch Range in background. ' + style,
+      'Tree-lined neighborhood street in ' + gl + ' Utah in spring. Blooming trees, well-kept homes, mountain views. ' + style,
+      'Local park or open space in ' + gl + ' Utah area. Green grass, mature trees, serene atmosphere. ' + style,
+      'Charming residential cul-de-sac in ' + gl + ' Utah. Varied home styles, lush landscaping, inviting community feel. ' + style,
     ],
     weekend_re: [
-      'Elegant real estate cover slide for properties in ' + gl + '. ' + brand,
-      'Modern home exterior, Utah County. ' + brand,
-      'Interior living space, bright and modern. ' + brand,
-      'Backyard or outdoor space, Utah home. ' + brand,
-      'Call to action — find your home in ' + gl + '. ' + brand,
+      'Stunning Utah County home exterior at dusk. Stone and stucco facade, three-car garage, mountain views. Warm lights in windows. ' + style,
+      'Modern open-concept living room, Utah home. High ceilings, large windows with mountain views, hardwood floors. ' + style,
+      'Gourmet kitchen in a Utah County home. White quartz countertops, stainless appliances, natural light. ' + style,
+      'Spacious master bedroom suite. Vaulted ceilings, large windows, serene atmosphere, mountain vista. ' + style,
+      'Beautifully landscaped Utah home backyard. Patio with outdoor seating, mature trees, mountain backdrop. ' + style,
     ],
     blog_teaser: [
-      'Eye-catching hook graphic: ' + baseBrief + '. ' + brand,
-      'Key insight from the blog, ' + gl + ' real estate. ' + brand,
-      'Read more CTA — Utah Vista Homes blog. ' + brand,
+      'Aspirational Utah County neighborhood at golden hour. Beautiful homes, mountain backdrop, peaceful atmosphere. ' + style,
+      'Welcoming home front door and entryway, Utah home. Warm light, fresh flowers, inviting feel. ' + style,
+      'Wide shot of ' + gl + ' Utah residential area. Mountains, sky, and neighborhood in harmony. ' + style,
     ],
   };
-  var set = slides[postType] || [baseBrief + '. ' + brand];
+  var set = slides[postType] || [
+    'Beautiful home and neighborhood in ' + gl + ' Utah. Mountain backdrop, spring afternoon. ' + style,
+  ];
   return set[slideIndex] || set[0];
 }
 
